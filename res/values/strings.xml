@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">AudioAlert</string>
-    <string name="hello_world">En</string>
+    <string name="app_name">Audio Alert</string>
     <string name="menu_settings">Settings</string>
     <string name="mic_desc">Mic</string>
-    <string name="enable">Microphone Status</string>
+    <string name="mic_status">Microphone Status</string>
     <string name="switch_on">On</string>
     <string name="switch_off">Off</string>
+    <string name="sleep_status">Prevent Sleep Status</string>
+    <string name="mic_image">Microphone</string>
+    <string name="settings_text">Settings</string>
+    
 
 </resources>
