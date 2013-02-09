@@ -43,9 +43,7 @@ public class ButtonController implements OnClickListener, OnTouchListener
 	public void handleButtonToggle(View v)
 	{
 		int id = v.getId();
-		switch (id)
-		{
-		case R.id.mic_switch:
+		if( id == R.id.mic_switch) {
 			Log.d(TAG, "press");
 			Switch micS = (Switch) v;
 
@@ -53,14 +51,9 @@ public class ButtonController implements OnClickListener, OnTouchListener
 				Log.d(TAG, "switch on");
 			else
 				Log.d(TAG, "switch off");
-
-			break;
-
-		
 			
-		default:
+		} else {
 			Log.d("swtich button test", "default");
-			break;
 		}
 	}
 
