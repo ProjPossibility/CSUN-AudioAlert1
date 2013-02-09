@@ -1,83 +1,98 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:padding="15dp"
     tools:context=".MainActivity" >
 
-    <ImageView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:contentDescription="@string/mic_image"
-        android:maxHeight="5dp"
-        android:maxWidth="5dp"
-        android:padding="15dp"
-        android:src="@drawable/mic_icon_on" />
+        android:orientation="vertical"
+        android:padding="15dp" >
+        
+        <Button
+            android:id="@+id/test_alert"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/test_button_text" />
 
-    <Switch
-        android:id="@+id/mic_switch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:paddingTop="25dp"
-        android:text="@string/mic_status"
-        android:textOff="@string/switch_off"
-        android:textOn="@string/switch_on" />
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:contentDescription="@string/mic_image"
+            android:maxHeight="5dp"
+            android:maxWidth="5dp"
+            android:padding="15dp"
+            android:paddingTop="15dp"
+            android:src="@drawable/mic_icon_on" />
 
-    <Switch
-        android:id="@+id/sleep_switch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:paddingTop="25dp"
-        android:text="@string/sleep_status"
-        android:textOff="@string/switch_off"
-        android:textOn="@string/switch_on" />
+        <Switch
+            android:id="@+id/mic_switch"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:paddingBottom="25dp"
+            android:paddingTop="25dp"
+            android:text="@string/mic_status"
+            android:textOff="@string/switch_off"
+            android:textOn="@string/switch_on" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:paddingTop="25dp"
-        android:text="@string/settings_text"
-        android:textSize="25sp" />
-    
-    <Switch
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:paddingTop="10dp"
-        android:text="@string/mic_status"
-        android:textOff="@string/switch_off"
-        android:textOn="@string/switch_on" />
+        <Switch
+            android:id="@+id/sleep_switch"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:paddingBottom="25dp"
+            android:paddingTop="25dp"
+            android:text="@string/sleep_status"
+            android:textOff="@string/switch_off"
+            android:textOn="@string/switch_on" />
 
-    <Switch
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:paddingTop="10dp"
-        android:text="@string/sleep_status"
-        android:textOff="@string/switch_off"
-        android:textOn="@string/switch_on" />
-    
-    <Switch
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:paddingTop="10dp"
-        android:text="@string/mic_status"
-        android:textOff="@string/switch_off"
-        android:textOn="@string/switch_on" />
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:paddingBottom="25dp"
+            android:paddingTop="25dp"
+            android:text="@string/settings_text"
+            android:textSize="25sp" />
 
-    <Switch
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:paddingTop="10dp"
-        android:text="@string/sleep_status"
-        android:textOff="@string/switch_off"
-        android:textOn="@string/switch_on" />
+        <Switch
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:paddingTop="10dp"
+            android:text="@string/mic_status"
+            android:textOff="@string/switch_off"
+            android:textOn="@string/switch_on" />
 
-</LinearLayout>
+        <Switch
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:paddingTop="10dp"
+            android:text="@string/sleep_status"
+            android:textOff="@string/switch_off"
+            android:textOn="@string/switch_on" />
+
+        <Switch
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:paddingTop="10dp"
+            android:text="@string/mic_status"
+            android:textOff="@string/switch_off"
+            android:textOn="@string/switch_on" />
+
+        <Switch
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:paddingTop="10dp"
+            android:text="@string/sleep_status"
+            android:textOff="@string/switch_off"
+            android:textOn="@string/switch_on" />
+    </LinearLayout>
+
+</ScrollView>

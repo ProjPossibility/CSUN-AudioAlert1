@@ -10,6 +10,6 @@
     <string name="sleep_status">Prevent Sleep Status</string>
     <string name="mic_image">Microphone</string>
     <string name="settings_text">Settings</string>
-    
+    <string name="test_button_text">Click to Activate Alert</string>
 
 </resources>
