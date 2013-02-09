@@ -1,6 +1,7 @@
 package info.ss12.audioalertsystem;
 
-import libs.musicg-1.4.2.0.wave.WaveHeader;
+import com.musicg.api.DetectionApi;
+import com.musicg.wave.WaveHeader;
 
 public class AlarmAPI extends DetectionApi {
 	public AlarmAPI (WaveHeader waveHeader) {
@@ -27,7 +28,7 @@ public class AlarmAPI extends DetectionApi {
 		numRobust = 10;
 	}
 	
-	public boolean isWhistle(byte[] audioBytes) {
+	public boolean isFireAlarm(byte[] audioBytes) {
 		return isSpecificSound(audioBytes);
 	}
 }
