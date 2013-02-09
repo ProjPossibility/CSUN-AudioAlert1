@@ -10,7 +10,7 @@ public class AlarmAPI extends DetectionApi {
 	
 	protected void init() {
 		// settings for detecting a fire alarm
-		minFrequency = 1500.0f;
+		minFrequency = 0.0f;
 		maxFrequency = Double.MAX_VALUE;
 		
 		minIntensity = 1000.0f;
