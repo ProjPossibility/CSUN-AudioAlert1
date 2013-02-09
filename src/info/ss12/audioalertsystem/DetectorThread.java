@@ -27,12 +27,16 @@ import com.musicg.wave.WaveHeader;
 
 import android.media.AudioFormat;
 import android.media.AudioRecord;
+import android.os.Vibrator;
+import android.content.Context;
 
 public class DetectorThread extends Thread{
 
 	private RecorderThread recorder;
 	private WaveHeader waveHeader;
 	private AlarmAPI alarmAPI;
+	private Context context;
+	private Vibrator vibrator = (Vibrator)context.getSystemService("VIBRATOR_SERVICE");
 	private volatile Thread _thread;
 
 	private LinkedList<Boolean> alarmResultList = new LinkedList<Boolean>();
@@ -112,13 +116,14 @@ public class DetectorThread extends Thread{
 		
 					if (isAlarm) {
 						numAlarms++;
+						vibrator.vibrate(5000);
 					}
 					//System.out.println("num:" + numWhistles);
 		
 					if (numAlarms >= alarmPassScore) {
 						// clear buffer
 						initBuffer();
-						onWhistleDetected();
+						onFireAlarmDetected();
 					}
 				// end whistle detection
 				}
@@ -137,7 +142,7 @@ public class DetectorThread extends Thread{
 		}
 	}
 	
-	private void onWhistleDetected(){
+	private void onFireAlarmDetected(){
 		if (onSignalsDetectedListener != null){
 			onSignalsDetectedListener.onFireAlarmDetected();
 		}
