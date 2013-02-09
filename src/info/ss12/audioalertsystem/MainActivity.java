@@ -2,11 +2,15 @@ package info.ss12.audioalertsystem;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.util.Log;
 import android.view.Menu;
 import android.widget.Switch;
 
 public class MainActivity extends Activity
 {
+	private final String TAG = "Main Activity";
+	
+	
 	private Switch micSwitch;
 	private ButtonController buttonControl;
 	
@@ -18,6 +22,9 @@ public class MainActivity extends Activity
 		buttonControl = new ButtonController();
 		micSwitch = (Switch )findViewById(R.id.mic_switch);
 		micSwitch.setOnClickListener(buttonControl);
+		micSwitch.setOnTouchListener(buttonControl);
+		
+		
 	}
 
 	@Override
