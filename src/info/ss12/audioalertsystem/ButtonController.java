@@ -22,11 +22,11 @@ public class ButtonController implements OnClickListener, OnTouchListener
 	private Intent intent;
 	private Messenger messenger;
 	
-	public ButtonController(MainActivity mainActivity)
+	public ButtonController(MainActivity mainActivity, Intent intent)
 	{
+		this.intent = intent;
 		this.mainActivity = mainActivity;
 		localService = new LocalService();
-		intent = new Intent(mainActivity, LocalService.class);
 		messenger = new Messenger(mainActivity.getHandler());
 	}
 	
@@ -59,7 +59,7 @@ public class ButtonController implements OnClickListener, OnTouchListener
 //		}
 		return false;
 	}
-	private boolean swap = false;
+	
 	public void handleButtonToggle(View v)
 	{
 		int id = v.getId();
@@ -103,8 +103,7 @@ public class ButtonController implements OnClickListener, OnTouchListener
 	public void turnOffAllNoti()
 	{
 		Message msg = Message.obtain();
-		msg.arg1 = !swap ? 1 : 0;
-		swap ^= true;
+		msg.arg1 = !mainActivity.isAlarmActivated() ? 1 : 0;
 		try 
 		{
 			messenger.send(msg);
