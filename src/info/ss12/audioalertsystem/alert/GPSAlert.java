@@ -45,7 +45,7 @@ public class GPSAlert extends AbstractAlert
 			Log.d("GPS ALERT", "LocationChanged");
 			CUR_LATITUDE = new Double(loc.getLatitude());
 			CUR_LONGITUDE = new Double(loc.getLongitude());
-			Toast.makeText(context, CUR_LATITUDE + " "+ CUR_LONGITUDE, Toast.LENGTH_SHORT).show();
+//			Toast.makeText(context, CUR_LATITUDE + " "+ CUR_LONGITUDE, Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
