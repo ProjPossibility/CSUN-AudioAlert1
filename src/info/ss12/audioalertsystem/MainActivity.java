@@ -1,5 +1,6 @@
 package info.ss12.audioalertsystem;
 
+import info.ss12.audioalertsystem.notification.CameraLightNotification;
 import info.ss12.audioalertsystem.notification.FlashNotification;
 import info.ss12.audioalertsystem.notification.NotificationBarNotification;
 import info.ss12.audioalertsystem.notification.VibrateNotification;
@@ -11,7 +12,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.widget.Button;
 import android.widget.Switch;
-import android.content.Context;
 
 public class MainActivity extends Activity
 {
@@ -24,16 +24,17 @@ public class MainActivity extends Activity
 	
 	private ButtonController buttonControl;
 	
-	private Context context;
 	private VibrateNotification vibrate;
 	private FlashNotification flash;
 	private NotificationBarNotification bar;
+	private CameraLightNotification cameraLight;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
 		buttonControl = new ButtonController(this);
 		micSwitch = (Switch )findViewById(R.id.mic_switch);
 		micSwitch.setOnClickListener(buttonControl);
@@ -42,10 +43,10 @@ public class MainActivity extends Activity
 		testAlert = (Button)findViewById(R.id.test_alert);
 		testAlert.setOnClickListener(buttonControl);
 		
-		context = this.getApplicationContext();
 		vibrate = new VibrateNotification(this);
 		flash = new FlashNotification(this);
-		bar = new NotificationBarNotification();		
+		bar = new NotificationBarNotification();
+		cameraLight = new CameraLightNotification(this);
 	}
 
 	@Override
@@ -68,14 +69,16 @@ public class MainActivity extends Activity
 				bar.startNotify();
 				flash.startNotify();
 				vibrate.startNotify();
+				cameraLight.startNotify();
 				alarmActivated = true;
 			}
 			else if(msg.arg1 == 0 && alarmActivated)
 			{
-				alarmActivated = false;
 				bar.stopNotify();
 				flash.stopNotify();
-				vibrate.stopNotify();	
+				vibrate.stopNotify();
+				cameraLight.stopNotify();
+				alarmActivated = false;
 			}
 			Log.d(TAG, "FIRE ALARM DETECTED");	
 		}

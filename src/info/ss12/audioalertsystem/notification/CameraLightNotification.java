@@ -42,7 +42,6 @@ public class CameraLightNotification extends AbstractNotification {
 				});
 			}
 		}, 0, 500);
-		camera.startPreview();
 	}
 
 	@Override
