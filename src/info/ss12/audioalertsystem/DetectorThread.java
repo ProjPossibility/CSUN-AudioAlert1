@@ -22,45 +22,47 @@ package info.ss12.audioalertsystem;
 
 import java.util.LinkedList;
 
-import info.ss12.audioalertsystem.AlarmAPI;
-import com.musicg.wave.WaveHeader;
-
 import android.media.AudioFormat;
 import android.media.AudioRecord;
-import android.os.Vibrator;
-import android.content.Context;
 
-public class DetectorThread extends Thread{
+import com.musicg.api.WhistleApi;
+import com.musicg.wave.WaveHeader;
+
+public class DetectorThread extends Thread
+{
 
 	private RecorderThread recorder;
 	private WaveHeader waveHeader;
-	private AlarmAPI alarmAPI;
-	private Context context;
-	private Vibrator vibrator = (Vibrator)context.getSystemService("VIBRATOR_SERVICE");
+	private WhistleApi whistleApi;
 	private volatile Thread _thread;
 
-	private LinkedList<Boolean> alarmResultList = new LinkedList<Boolean>();
-	private int numAlarms;
-	private int alarmCheckLength = 3;
-	private int alarmPassScore = 3;
-	
-	private OnSignalsDetectedListener onSignalsDetectedListener;
-	
-	public DetectorThread(RecorderThread recorder){
+	private LinkedList<Boolean> whistleResultList = new LinkedList<Boolean>();
+	private int numWhistles;
+	private int totalWhistlesDetected = 0;
+	private int whistleCheckLength = 3;
+	private int whistlePassScore = 3;
+	private OnSignalsDetectedListener listener;
+
+	public DetectorThread(RecorderThread recorder, OnSignalsDetectedListener listener)
+	{
 		this.recorder = recorder;
+		this.listener = listener;
 		AudioRecord audioRecord = recorder.getAudioRecord();
-		
+
 		int bitsPerSample = 0;
-		if (audioRecord.getAudioFormat() == AudioFormat.ENCODING_PCM_16BIT){
+		if (audioRecord.getAudioFormat() == AudioFormat.ENCODING_PCM_16BIT)
+		{
 			bitsPerSample = 16;
 		}
-		else if (audioRecord.getAudioFormat() == AudioFormat.ENCODING_PCM_8BIT){
+		else if (audioRecord.getAudioFormat() == AudioFormat.ENCODING_PCM_8BIT)
+		{
 			bitsPerSample = 8;
 		}
-		
+
 		int channel = 0;
 		// whistle detection only supports mono channel
-		if (audioRecord.getChannelConfiguration() == AudioFormat.CHANNEL_CONFIGURATION_MONO){
+		if (audioRecord.getChannelConfiguration() == AudioFormat.CHANNEL_CONFIGURATION_MONO)
+		{
 			channel = 1;
 		}
 
@@ -68,87 +70,102 @@ public class DetectorThread extends Thread{
 		waveHeader.setChannels(channel);
 		waveHeader.setBitsPerSample(bitsPerSample);
 		waveHeader.setSampleRate(audioRecord.getSampleRate());
-		alarmAPI = new AlarmAPI(waveHeader);
+		whistleApi = new WhistleApi(waveHeader);
 	}
 
-	private void initBuffer() {
-		numAlarms = 0;
-		alarmResultList.clear();
-		
+	private void initBuffer()
+	{
+		numWhistles = 0;
+		whistleResultList.clear();
+
 		// init the first frames
-		for (int i = 0; i < alarmCheckLength; i++) {
-			alarmResultList.add(false);
+		for (int i = 0; i < whistleCheckLength; i++)
+		{
+			whistleResultList.add(false);
 		}
 		// end init the first frames
 	}
 
-	public void start() {
+	public void start()
+	{
 		_thread = new Thread(this);
-        _thread.start();
-    }
-	
-	public void stopDetection(){
+		_thread.start();
+	}
+
+	public void stopDetection()
+	{
 		_thread = null;
 	}
-	
-	public void run() {
-		try {
+
+	public void run()
+	{
+		try
+		{
 			byte[] buffer;
 			initBuffer();
-			
+
 			Thread thisThread = Thread.currentThread();
-			while (_thread == thisThread) {
+			while (_thread == thisThread)
+			{
 				// detect sound
 				buffer = recorder.getFrameBytes();
-				
+
 				// audio analyst
-				if (buffer != null) {
-					// sound detected	
+				if (buffer != null)
+				{
+					// sound detected
+					// MainActivity.whistleValue = numWhistles;
+
 					// whistle detection
-					//System.out.println("*Whistle:");
-					boolean isAlarm = alarmAPI.isFireAlarm(buffer);
-					if (alarmResultList.getFirst()) {
-						numAlarms--;
+//					 System.out.println("Whistle:");
+					boolean isWhistle = whistleApi.isWhistle(buffer);
+					if (whistleResultList.getFirst())
+					{
+						numWhistles--;
 					}
-		
-					alarmResultList.removeFirst();
-					alarmResultList.add(isAlarm);
-		
-					if (isAlarm) {
-						numAlarms++;
-						vibrator.vibrate(5000);
+
+					whistleResultList.removeFirst();
+					whistleResultList.add(isWhistle);
+
+					if (isWhistle)
+					{
+						numWhistles++;
 					}
-					//System.out.println("num:" + numWhistles);
-		
-					if (numAlarms >= alarmPassScore) {
+//					 System.out.println("num:" + numWhistles);
+					
+					if (numWhistles >= whistlePassScore)
+					{
 						// clear buffer
 						initBuffer();
-						onFireAlarmDetected();
+						totalWhistlesDetected++;
+						listener.onAlarmDetector();
 					}
-				// end whistle detection
+					// end whistle detection
 				}
-				else{
+				else
+				{
 					// no sound detected
-					if (alarmResultList.getFirst()) {
-						numAlarms--;
+					if (whistleResultList.getFirst())
+					{
+						numWhistles--;
 					}
-					alarmResultList.removeFirst();
-					alarmResultList.add(false);
+					whistleResultList.removeFirst();
+					whistleResultList.add(false);
+
+					// MainActivity.whistleValue = numWhistles;
 				}
 				// end audio analyst
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
 		}
 	}
-	
-	private void onFireAlarmDetected(){
-		if (onSignalsDetectedListener != null){
-			onSignalsDetectedListener.onFireAlarmDetected();
-		}
+
+	public int getTotalWhistlesDetected()
+	{
+		return totalWhistlesDetected;
 	}
-	
-	public void setOnSignalsDetectedListener(OnSignalsDetectedListener listener){
-		onSignalsDetectedListener = listener;
-	}
+
 }
