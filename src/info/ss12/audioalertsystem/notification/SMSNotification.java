@@ -41,7 +41,7 @@ public class SMSNotification extends AbstractNotification
 	public void stopNotify(){
 		
 	}
-	private String createMapsString(String latitude, String longitude) {
+	private String createMapsString(double latitude, double longitude) {
 		String url = "https://maps.google.com/?q=";
 		url= url + latitude +"," + longitude;
 		return url;
