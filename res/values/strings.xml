@@ -18,5 +18,8 @@
     <string name="screen_flash">Screen Flash on Alert</string>
     <string name="notifications">Notifications</string>
     <string name="settings_header">Alert Settings</string>
+    <string name="add_contact">Add Contact</string>
+    <string name="remove">Remove</string>
+    <string name="phone_hint">Phone</string>
 
 </resources>

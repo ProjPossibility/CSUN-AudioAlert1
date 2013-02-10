@@ -1,124 +1,66 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_main"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
     tools:context=".MainActivity" >
 
-    <LinearLayout
-        android:id="@+id/layout_main"
+    <Button
+        android:id="@+id/test_alert"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="15dp" >
+        android:text="@string/test_button_text" />
 
-        <Button
-            android:id="@+id/test_alert"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/test_button_text" />
+    <ImageView
+        android:id="@+id/mic_image"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:contentDescription="@string/mic_image"
 
-        <ImageView
-            android:id="@+id/mic_image"
+        android:src="@drawable/mic_icon_off" />
+
+    <Switch
+        android:id="@+id/mic_switch"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="@string/mic_status"
+        android:textOff="@string/switch_off"
+        android:textOn="@string/switch_on" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:contentDescription="@string/mic_image"
-            android:maxHeight="5dp"
-            android:maxWidth="5dp"
-            android:padding="15dp"
-            android:paddingTop="15dp"
-            android:src="@drawable/mic_icon_off" />
+            android:orientation="horizontal" >
 
-        <Switch
-            android:id="@+id/mic_switch"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:paddingBottom="25dp"
-            android:paddingTop="25dp"
-            android:text="@string/mic_status"
-            android:textOff="@string/switch_off"
-            android:textOn="@string/switch_on" />
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/emergency_contact"
+                android:textSize="16dp" />
 
-        <Switch
-            android:id="@+id/sleep_switch"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:paddingBottom="25dp"
-            android:paddingTop="25dp"
-            android:text="@string/sleep_status"
-            android:textOff="@string/switch_off"
-            android:textOn="@string/switch_on" />
+            <Button
+                android:id="@+id/add_phone_button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/add_contact" />
+        </LinearLayout>
 
-        <TextView
+        <ListView
+            android:id="@+id/phone_list"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:paddingBottom="25dp"
-            android:paddingTop="25dp"
-            android:text="@string/settings_text"
-            android:textSize="25sp" />
-
-        <Switch
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:paddingTop="10dp"
-            android:text="@string/mic_status"
-            android:textOff="@string/switch_off"
-            android:textOn="@string/switch_on" />
-
-        <Switch
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:paddingTop="10dp"
-            android:text="@string/sleep_status"
-            android:textOff="@string/switch_off"
-            android:textOn="@string/switch_on" />
-
-        <Switch
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:paddingTop="10dp"
-            android:text="@string/mic_status"
-            android:textOff="@string/switch_off"
-            android:textOn="@string/switch_on" />
-
-        <Switch
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:paddingTop="10dp"
-            android:text="@string/sleep_status"
-            android:textOff="@string/switch_off"
-            android:textOn="@string/switch_on" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:text="@string/emergency_contact"
-            android:textSize="26sp" />
-
-        <EditText
-            android:id="@+id/phoneNum1"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:inputType="phone" />
-        
-        <EditText
-            android:id="@+id/phoneNum2"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:inputType="phone" />
-        
-        <EditText
-            android:id="@+id/phoneNum3"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:inputType="phone" />
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
-</ScrollView>
+</LinearLayout>
