@@ -184,6 +184,8 @@ public class MainActivity extends Activity
 
 			if (msg.arg1 == 1 && !alarmActivated) // Turn On
 			{
+				if(mainView != null && !mainView.isShown())
+					setContentView(mainView);
 				if (notificationsAlert)
 					bar.startNotify();
 				if (screenFlashAlert)
