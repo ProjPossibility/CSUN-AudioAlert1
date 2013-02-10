@@ -1,28 +1,33 @@
 package info.ss12.audioalertsystem;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
+import info.ss12.audioalertsystem.notification.FlashNotification;
+import info.ss12.audioalertsystem.notification.NotificationBarNotification;
+import info.ss12.audioalertsystem.notification.VibrateNotification;
 import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Messenger;
 import android.util.Log;
 import android.view.Menu;
-import android.widget.LinearLayout;
+import android.widget.Button;
 import android.widget.Switch;
 
 public class MainActivity extends Activity
 {
 	private final String TAG = "Main Activity";
 	private boolean alarmActivated = false;
-	private LinearLayout mainLayout;
+
 	
 	private Switch micSwitch;
+	private Button testAlert;
+	
 	private ButtonController buttonControl;
+	
+	private VibrateNotification vibrate;
+	private FlashNotification flash;
+	private NotificationBarNotification bar;
+	
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -34,6 +39,12 @@ public class MainActivity extends Activity
 		micSwitch.setOnClickListener(buttonControl);
 		micSwitch.setOnTouchListener(buttonControl);
 
+		testAlert = (Button)findViewById(R.id.test_alert);
+		testAlert.setOnClickListener(buttonControl);
+		
+		vibrate = new VibrateNotification();
+		flash = new FlashNotification();
+		bar = new NotificationBarNotification();		
 	}
 
 	@Override
@@ -55,47 +66,23 @@ public class MainActivity extends Activity
 			
 			alarmActivated = true;
 			
-			
-			Timer timer = new Timer();
-			timer.schedule(new TimerTask() {
-				
-				@Override
-				public void run() {
-					runOnUiThread(new Runnable() 
-					{
-						
-						@Override
-						public void run() 
-						{
-							mainLayout = (LinearLayout) findViewById(R.id.layout_main);
-							
-							mainLayout.setBackgroundColor(swap ? Color.RED : Color.WHITE);
-							swap ^= true;
-						}
-					});
-					
-				}
-			}, 0, 500);
-			
-			
-			
+			bar.startNotify();
+			flash.startNotify();
+			vibrate.startNotify();			
 
 			Log.d(TAG, "FIRE ALARM DETECTED");	
 		}
 		
 	};
-	boolean swap = false;
 
 	public Handler getHandler() 
 	{
 		return handler;
 	}
-
+	
 	public void setHandler(Handler handler) 
 	{
 		this.handler = handler;
 	}
 
-
-	
 }
