@@ -6,35 +6,36 @@ import android.hardware.Camera.Parameters;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class CameraLightNotification extends AbstractNotification {
+public class CameraLightNotification extends AbstractNotification
+{
 
 	private Camera camera;
 	private Parameters light_ON;
 	private Parameters light_OFF;
 	private Timer timer;
 	private boolean lightToggle;
-	
-	public CameraLightNotification() {
-		camera = Camera.open();
-		light_ON = camera.getParameters();
-		light_OFF = camera.getParameters();
-		light_ON.setFlashMode(Parameters.FLASH_MODE_TORCH);
-		light_OFF.setFlashMode(Parameters.FLASH_MODE_OFF);
-		timer = new Timer();
-		lightToggle = false;
-	}
-	
-	@Override
-	public void startNotify() {
+
+	public CameraLightNotification()
+	{
 		
-		camera.startPreview();
-		timer.schedule(new TimerTask() {
+	}
+
+	@Override
+	public void startNotify()
+	{
+		configCamera();
+		timer = new Timer();
+		timer.schedule(new TimerTask()
+		{
 			@Override
-			public void run() {
-				if (lightToggle) {
+			public void run()
+			{
+				if (lightToggle)
+				{
 					camera.setParameters(light_ON);
 				}
-				else {
+				else
+				{
 					camera.setParameters(light_OFF);
 				}
 				lightToggle ^= true;
@@ -43,9 +44,21 @@ public class CameraLightNotification extends AbstractNotification {
 	}
 
 	@Override
-	public void stopNotify() {
+	public void stopNotify()
+	{
 		timer.cancel();
 		camera.stopPreview();
 		camera.release();
+	}
+	
+	public void configCamera()
+	{
+		camera = Camera.open();
+		camera.startPreview();
+		light_ON = camera.getParameters();
+		light_OFF = camera.getParameters();
+		light_ON.setFlashMode(Parameters.FLASH_MODE_TORCH);
+		light_OFF.setFlashMode(Parameters.FLASH_MODE_OFF);
+		lightToggle = false;
 	}
 }
