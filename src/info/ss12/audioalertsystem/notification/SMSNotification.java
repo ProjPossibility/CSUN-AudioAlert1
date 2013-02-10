@@ -44,7 +44,7 @@ public class SMSNotification extends AbstractNotification
 
 		for (String number : phoneNumbers)
 		{
-			sms.sendTextMessage(number, null, createMapsString(GPSAlert.CUR_LATITUDE, GPSAlert.CUR_LONGITUDE), pi,
+			sms.sendTextMessage(number, null, "An alert was detected around me. Click for location: " + createMapsString(GPSAlert.CUR_LATITUDE, GPSAlert.CUR_LONGITUDE), pi,
 					null);
 		}
 

@@ -1,6 +1,5 @@
 package info.ss12.audioalertsystem;
 
-import android.R.raw;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Message;
@@ -18,14 +17,9 @@ import android.widget.Switch;
 
 public class ButtonController implements OnClickListener, OnTouchListener, OnMenuItemClickListener
 {
-	private boolean screenFlashAlert;
-	private boolean vibrateAlert;
-	private boolean cameraFlashAlert;
-	private boolean notificationsAlert;
-	private boolean txtMessageAlert;
+
 	private final String TAG = "Button Controller";
 	private MainActivity mainActivity;
-	private LocalService localService;
 	private Intent intent;
 	private Messenger messenger;
 	
@@ -33,25 +27,12 @@ public class ButtonController implements OnClickListener, OnTouchListener, OnMen
 	{
 		this.intent = intent;
 		this.mainActivity = mainActivity;
-		localService = new LocalService();
 		messenger = new Messenger(mainActivity.getHandler());
 	}
 	
 	@Override
 	public void onClick(View v)
-	{
-		int id = v.getId();
-		if(id == R.id.camera_flash)
-			cameraFlashAlert = true;
-		else if(id == R.id.notifications)
-			notificationsAlert = true;
-		else if(id == R.id.vibrate)
-			vibrateAlert = true;
-		else if(id == R.id.screen_flash)
-			screenFlashAlert = true;
-		else if(id == R.id.txt_message)
-			txtMessageAlert = true;
-			
+	{		
 		Log.d(TAG, "On CLICK CALLED");
 		handleButtonToggle(v);
 	}
@@ -83,7 +64,10 @@ public class ButtonController implements OnClickListener, OnTouchListener, OnMen
 	{
 		int id = v.getId();
 
-		
+		if(id == R.id.test_alert)
+		{
+			turnOffAllNoti();
+		}
 		if(id == R.id.mic_switch)
 		{
 			Log.d(TAG, "press");
@@ -105,10 +89,6 @@ public class ButtonController implements OnClickListener, OnTouchListener, OnMen
 			}
 			
 		} 
-		else if(id == R.id.test_alert)
-		{
-			turnOffAllNoti();
-		}
 		else 
 		{
 			Log.d("swtich button test", "default");
@@ -122,7 +102,7 @@ public class ButtonController implements OnClickListener, OnTouchListener, OnMen
 	public void turnOffAllNoti()
 	{
 		Message msg = Message.obtain();
-		msg.arg1 = !mainActivity.isAlarmActivated() ? 1 : 0;
+		msg.arg1 = !mainActivity.isAlarmActivated() ? 0 : 0;
 		try 
 		{
 			messenger.send(msg);
