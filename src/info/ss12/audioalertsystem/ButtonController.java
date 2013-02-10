@@ -40,6 +40,18 @@ public class ButtonController implements OnClickListener, OnTouchListener, OnMen
 	@Override
 	public void onClick(View v)
 	{
+		int id = v.getId();
+		if(id == R.id.camera_flash)
+			cameraFlashAlert = true;
+		else if(id == R.id.notifications)
+			notificationsAlert = true;
+		else if(id == R.id.vibrate)
+			vibrateAlert = true;
+		else if(id == R.id.screen_flash)
+			screenFlashAlert = true;
+		else if(id == R.id.txt_message)
+			txtMessageAlert = true;
+			
 		Log.d(TAG, "On CLICK CALLED");
 		handleButtonToggle(v);
 	}
