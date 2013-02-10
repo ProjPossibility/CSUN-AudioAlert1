@@ -19,17 +19,25 @@ import android.util.Log;
 import android.view.Menu;
 import android.widget.Button;
 import android.widget.Switch;
+import android.widget.Toast;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.view.MenuItem;
 
 public class MainActivity extends Activity
 {
 	private final String TAG = "Main Activity";
 	private boolean alarmActivated = false;
-
+	private boolean onSettingScreen;
+	private boolean screenFlashAlert;
+	private boolean vibrateAlert;
+	private boolean cameraFlashAlert;
+	private boolean notificationsAlert;
+	private boolean txtMessageAlert;
 	
 	private Switch micSwitch;
 	private Button testAlert;
+	private MenuItem settings;
 	
 	private ButtonController buttonControl;
 	
@@ -60,7 +68,7 @@ public class MainActivity extends Activity
 
 		testAlert = (Button)findViewById(R.id.test_alert);
 		testAlert.setOnClickListener(buttonControl);
-		
+	
 		vibrate = new VibrateNotification(this);
 		flash = new FlashNotification(this);
 
@@ -163,7 +171,7 @@ public class MainActivity extends Activity
 	@Override
 	public void onBackPressed() 
 	{
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		/*AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Exit");
 		builder.setMessage("Exit application and disable service monitor? (You can press home to move to background)");
 		builder.setPositiveButton("Exit", new DialogInterface.OnClickListener() {
@@ -174,7 +182,10 @@ public class MainActivity extends Activity
 			}
 		});
 		builder.setNegativeButton("Cancel", null);
-		builder.show();
+		builder.show();*/
+		if(onSettingScreen)
+			this.setContentView(R.layout.activity_main);
+			
 	}
 
 
@@ -184,6 +195,12 @@ public class MainActivity extends Activity
 	{
 		stopService(intent);
 		super.onDestroy();
+	}
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		this.setContentView(R.layout.settings);
+		onSettingScreen = true;
+		return false;
 	}
 
     

@@ -12,5 +12,11 @@
     <string name="settings_text">Settings</string>
     <string name="test_button_text">Click to Activate Alert</string>
     <string name="emergency_contact">Emergency Contacts: </string>
+    <string name="camera_flash">Camera Flash on Alert</string>
+    <string name="vibrate">Vibrate on Alert</string>
+    <string name="txt_message">Text Emergency Contacts on Alert</string>
+    <string name="screen_flash">Screen Flash on Alert</string>
+    <string name="notifications">Notifications</string>
+    <string name="settings_header">Alert Settings</string>
 
 </resources>

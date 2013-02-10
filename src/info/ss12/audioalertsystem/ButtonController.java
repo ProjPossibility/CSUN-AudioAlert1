@@ -1,11 +1,14 @@
 package info.ss12.audioalertsystem;
 
+import android.R.raw;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,8 +16,13 @@ import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.Switch;
 
-public class ButtonController implements OnClickListener, OnTouchListener
+public class ButtonController implements OnClickListener, OnTouchListener, OnMenuItemClickListener
 {
+	private boolean screenFlashAlert;
+	private boolean vibrateAlert;
+	private boolean cameraFlashAlert;
+	private boolean notificationsAlert;
+	private boolean txtMessageAlert;
 	private final String TAG = "Button Controller";
 	private MainActivity mainActivity;
 	private LocalService localService;
@@ -111,6 +119,13 @@ public class ButtonController implements OnClickListener, OnTouchListener
 		{
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public boolean onMenuItemClick(MenuItem arg0) {
+		//open new page
+		mainActivity.setContentView(R.layout.settings);
+		return false;
 	}
 
 }
