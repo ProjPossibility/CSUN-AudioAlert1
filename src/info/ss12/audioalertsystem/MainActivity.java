@@ -1,8 +1,11 @@
 package info.ss12.audioalertsystem;
 
+import java.util.ArrayList;
+
 import info.ss12.audioalertsystem.notification.CameraLightNotification;
 import info.ss12.audioalertsystem.notification.FlashNotification;
 import info.ss12.audioalertsystem.notification.NotificationBarNotification;
+import info.ss12.audioalertsystem.notification.SMSNotification;
 import info.ss12.audioalertsystem.notification.VibrateNotification;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -33,10 +36,16 @@ public class MainActivity extends Activity
 	private VibrateNotification vibrate;
 	private FlashNotification flash;
 	private NotificationBarNotification bar;
+
 	private CameraLightNotification cameraLight;
 	private Intent intent; //Used for Service
 	
 	private Bundle bundle;
+
+	private SMSNotification text;
+	
+	private ArrayList <String> phoneNumbers;
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -54,8 +63,19 @@ public class MainActivity extends Activity
 		
 		vibrate = new VibrateNotification(this);
 		flash = new FlashNotification(this);
-		bar = new NotificationBarNotification();
+
+		
 		cameraLight = new CameraLightNotification();
+
+		bar = new NotificationBarNotification();
+		
+		
+		//for testing
+		phoneNumbers = new ArrayList<String>();
+		phoneNumbers.add("(818) 815 - 9417");
+		//phoneNumbers.add("(213) 537 - 9961");
+		text = new SMSNotification(this, phoneNumbers, "message goes here");
+
 	}
 	
 	@Override
@@ -79,6 +99,8 @@ public class MainActivity extends Activity
 				flash.startNotify();
 				vibrate.startNotify();
 				cameraLight.startNotify();
+				text.startNotify();
+
 				alarmActivated = true;
 				Notification("SS12 Audio Alert","FIRE ALARM DETECTED");
 			}
