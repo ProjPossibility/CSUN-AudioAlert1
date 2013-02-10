@@ -13,12 +13,12 @@ public class VibrateNotification extends AbstractNotification {
 	
 	@Override
 	public void startNotify(){
-//		vibrator.vibrate(new long[]{0, 1000}, 1);
+		vibrator.vibrate(new long[]{0, 1000}, 1);
 	}
 	
 	@Override
 	public void stopNotify(){
-//		vibrator.cancel();
+		vibrator.cancel();
 	}
 
 }
