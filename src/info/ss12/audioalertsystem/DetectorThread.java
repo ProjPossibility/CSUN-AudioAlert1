@@ -20,6 +20,8 @@
 
 package info.ss12.audioalertsystem;
 
+import info.ss12.audioalertsystem.alert.AudioAlert;
+
 import java.util.LinkedList;
 
 import android.media.AudioFormat;
@@ -41,9 +43,9 @@ public class DetectorThread extends Thread
 	private int totalWhistlesDetected = 0;
 	private int whistleCheckLength = 3;
 	private int whistlePassScore = 3;
-	private OnSignalsDetectedListener listener;
+	private AudioAlert listener;
 
-	public DetectorThread(RecorderThread recorder, OnSignalsDetectedListener listener)
+	public DetectorThread(RecorderThread recorder, AudioAlert listener)
 	{
 		this.recorder = recorder;
 		this.listener = listener;
@@ -138,7 +140,7 @@ public class DetectorThread extends Thread
 						// clear buffer
 						initBuffer();
 						totalWhistlesDetected++;
-						listener.onAlarmDetector();
+						listener.sendAlert();
 					}
 					// end whistle detection
 				}

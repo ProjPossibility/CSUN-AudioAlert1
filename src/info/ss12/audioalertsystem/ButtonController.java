@@ -1,7 +1,9 @@
 package info.ss12.audioalertsystem;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.os.Messenger;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,11 +15,15 @@ import android.widget.Switch;
 public class ButtonController implements OnClickListener, OnTouchListener
 {
 	private final String TAG = "Button Controller";
-	private Activity mainActivity;
+	private MainActivity mainActivity;
+	private LocalService localService;
+	private Intent intent;
 	
-	public ButtonController(Activity mainActivity)
+	public ButtonController(MainActivity mainActivity)
 	{
 		this.mainActivity = mainActivity;
+		localService = new LocalService();
+		intent = new Intent(mainActivity, LocalService.class);
 	}
 	
 	@Override
@@ -64,13 +70,16 @@ public class ButtonController implements OnClickListener, OnTouchListener
 			{
 				Log.d(TAG, "switch on");
 				micImage.setImageBitmap(BitmapFactory.decodeResource(mainActivity.getResources(), R.drawable.mic_icon_on));
-				DetectorServiceHelper.startServices(mainActivity);
+				
+				Messenger messenger = new Messenger(mainActivity.getHandler());
+				intent.putExtra("HANDLER", messenger);
+				mainActivity.startService(intent);
 			}
 			else
 			{
 				Log.d(TAG, "switch off");
 				micImage.setImageBitmap(BitmapFactory.decodeResource(mainActivity.getResources(), R.drawable.mic_icon_off));
-				DetectorServiceHelper.stopServices();
+				mainActivity.stopService(intent);
 			}
 			
 		} 
