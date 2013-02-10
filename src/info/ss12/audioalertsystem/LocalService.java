@@ -25,7 +25,7 @@ public class LocalService extends Service implements AlertListener,
 	@Override
 	public void onAlert() {
 		Message msg = Message.obtain();
-		msg.obj = "Audio Alert";
+		msg.arg1 = 1;
 		try 
 		{
 			messenger.send(msg);

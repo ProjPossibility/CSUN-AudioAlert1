@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 public class FlashNotification extends AbstractNotification {
 	private MainActivity mainActivity;
 	private boolean swap = false;
+	private Timer timer;
 	public FlashNotification(MainActivity mainActivity) {
 		this.mainActivity = mainActivity;
 	}
@@ -19,7 +20,7 @@ public class FlashNotification extends AbstractNotification {
 	@Override
 	public void startNotify(){
 		Log.d("In notify","Now");
-		Timer timer = new Timer();
+		timer = new Timer();
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
@@ -41,6 +42,7 @@ public class FlashNotification extends AbstractNotification {
 	
 	@Override
 	public void stopNotify(){
+		timer.cancel();
 		LinearLayout layout = (LinearLayout) mainActivity.findViewById(R.id.layout_main);
 		layout.setBackgroundColor(Color.WHITE);
 	}
