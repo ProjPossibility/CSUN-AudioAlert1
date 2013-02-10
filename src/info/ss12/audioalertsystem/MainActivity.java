@@ -45,10 +45,6 @@ public class MainActivity extends Activity
 	private NotificationBarNotification bar;
 
 	private CameraLightNotification cameraLight;
-	private Intent intent; //Used for Service
-	
-	private Bundle bundle;
-
 	private SMSNotification text;
 	
 	private GPSAlert gpsAlert;
@@ -86,11 +82,11 @@ public class MainActivity extends Activity
 		bar = new NotificationBarNotification();
 		
 		
-		//for testing
-		phoneNumbers = new ArrayList<String>();
-		phoneNumbers.add("(818) 815 - 9417");
-		//phoneNumbers.add("(213) 537 - 9961");
-		text = new SMSNotification(this, phoneNumbers, "message goes here");
+//		//for testing
+//		phoneNumbers = new ArrayList<String>();
+//		phoneNumbers.add("(818) 815 - 9417");
+//		//phoneNumbers.add("(213) 537 - 9961");
+//		text = new SMSNotification(this, phoneNumbers, "message goes here");
 
 		gpsAlert = new GPSAlert(this);
 	}
