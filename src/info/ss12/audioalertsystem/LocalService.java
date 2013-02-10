@@ -35,6 +35,20 @@ public class LocalService extends Service implements AlertListener,
 			e.printStackTrace();
 		}
 	}
+	
+	@Override
+	public void onDismiss() {
+		Message msg = Message.obtain();
+		msg.arg1 = 0;
+		try
+		{
+			messenger.send(msg);
+		}
+		catch (RemoteException e)
+		{
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * Implementation for NotificationListener.

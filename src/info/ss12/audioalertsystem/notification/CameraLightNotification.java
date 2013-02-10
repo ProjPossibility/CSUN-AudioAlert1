@@ -15,6 +15,7 @@ public class CameraLightNotification extends AbstractNotification {
 	private boolean lightToggle;
 	
 	public CameraLightNotification() {
+		camera = Camera.open();
 		light_ON = light_OFF = camera.getParameters();
 		light_ON.setFlashMode(Parameters.FLASH_MODE_TORCH);
 		light_OFF.setFlashMode(Parameters.FLASH_MODE_OFF);

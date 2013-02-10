@@ -153,6 +153,7 @@ public class DetectorThread extends Thread
 					}
 					whistleResultList.removeFirst();
 					whistleResultList.add(false);
+					listener.dismissAlert();
 
 					// MainActivity.whistleValue = numWhistles;
 				}
