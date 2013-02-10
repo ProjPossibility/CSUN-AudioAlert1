@@ -3,16 +3,19 @@ package info.ss12.audioalertsystem;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Messenger;
 import android.util.Log;
 import android.view.Menu;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 
-public class MainActivity extends Activity implements OnSignalsDetectedListener
+public class MainActivity extends Activity
 {
 	private final String TAG = "Main Activity";
 	private boolean alarmActivated = false;
@@ -40,41 +43,59 @@ public class MainActivity extends Activity implements OnSignalsDetectedListener
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
-	boolean swap = false;
-	@Override
-	public void onAlarmDetector()
+	
+	private Handler handler = new Handler()
 	{
-		if(alarmActivated)
-			return;
-		
-		alarmActivated = true;
-		
-		
-		Timer timer = new Timer();
-		timer.schedule(new TimerTask() {
-			
-			@Override
-			public void run() {
-				runOnUiThread(new Runnable() 
-				{
-					
-					@Override
-					public void run() 
-					{
-						mainLayout = (LinearLayout) findViewById(R.id.layout_main);
-						
-						mainLayout.setBackgroundColor(swap ? Color.RED : Color.WHITE);
-						swap ^= true;
-					}
-				});
-				
-			}
-		}, 0, 500);
-		
-		
-		
 
-		Log.d(TAG, "FIRE ALARM DETECTED");		
+		@Override
+		public void handleMessage(Message msg) 
+		{
+			if(alarmActivated)
+				return;
+			
+			alarmActivated = true;
+			
+			
+			Timer timer = new Timer();
+			timer.schedule(new TimerTask() {
+				
+				@Override
+				public void run() {
+					runOnUiThread(new Runnable() 
+					{
+						
+						@Override
+						public void run() 
+						{
+							mainLayout = (LinearLayout) findViewById(R.id.layout_main);
+							
+							mainLayout.setBackgroundColor(swap ? Color.RED : Color.WHITE);
+							swap ^= true;
+						}
+					});
+					
+				}
+			}, 0, 500);
+			
+			
+			
+
+			Log.d(TAG, "FIRE ALARM DETECTED");	
+		}
+		
+	};
+	boolean swap = false;
+
+	public Handler getHandler() 
+	{
+		return handler;
 	}
 
+	public void setHandler(Handler handler) 
+	{
+		this.handler = handler;
+	}
+
+
+	
 }

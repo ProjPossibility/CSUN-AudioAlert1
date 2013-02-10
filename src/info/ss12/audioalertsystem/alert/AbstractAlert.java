@@ -18,7 +18,7 @@ public class AbstractAlert {
 		this.alertListener = alertListener;
 	}
 
-	protected void sendAlert() {
+	public void sendAlert() {
 		if (alertListener != null) {
 			alertListener.onAlert();
 		}
