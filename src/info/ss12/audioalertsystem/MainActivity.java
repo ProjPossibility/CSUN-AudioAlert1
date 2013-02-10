@@ -43,8 +43,8 @@ public class MainActivity extends Activity
 		testAlert.setOnClickListener(buttonControl);
 		
 		context = this.getApplicationContext();
-		vibrate = new VibrateNotification(context);
-		flash = new FlashNotification();
+		vibrate = new VibrateNotification(this);
+		flash = new FlashNotification(this);
 		bar = new NotificationBarNotification();		
 	}
 
@@ -62,15 +62,21 @@ public class MainActivity extends Activity
 		@Override
 		public void handleMessage(Message msg) 
 		{
-			if(alarmActivated)
-				return;
 			
-			alarmActivated = true;
-			
-			bar.startNotify();
-			flash.startNotify();
-			vibrate.startNotify();			
-
+			if(msg.arg1 == 1 && !alarmActivated) // Turn On
+			{
+				bar.startNotify();
+				flash.startNotify();
+				vibrate.startNotify();
+				alarmActivated = true;
+			}
+			else if(msg.arg1 == 0 && alarmActivated)
+			{
+				alarmActivated = false;
+				bar.stopNotify();
+				flash.stopNotify();
+				vibrate.stopNotify();	
+			}
 			Log.d(TAG, "FIRE ALARM DETECTED");	
 		}
 		

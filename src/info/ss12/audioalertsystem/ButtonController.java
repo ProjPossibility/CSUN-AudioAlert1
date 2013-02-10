@@ -59,7 +59,7 @@ public class ButtonController implements OnClickListener, OnTouchListener
 //		}
 		return false;
 	}
-
+	private boolean swap = false;
 	public void handleButtonToggle(View v)
 	{
 		int id = v.getId();
@@ -73,9 +73,7 @@ public class ButtonController implements OnClickListener, OnTouchListener
 			if (micS.isChecked())
 			{
 				Log.d(TAG, "switch on");
-				micImage.setImageBitmap(BitmapFactory.decodeResource(mainActivity.getResources(), R.drawable.mic_icon_on));
-				
-				
+				micImage.setImageBitmap(BitmapFactory.decodeResource(mainActivity.getResources(), R.drawable.mic_icon_on));			
 				intent.putExtra("HANDLER", messenger);
 				mainActivity.startService(intent);
 			}
@@ -84,21 +82,13 @@ public class ButtonController implements OnClickListener, OnTouchListener
 				Log.d(TAG, "switch off");
 				micImage.setImageBitmap(BitmapFactory.decodeResource(mainActivity.getResources(), R.drawable.mic_icon_off));
 				mainActivity.stopService(intent);
+				turnOffAllNoti();
 			}
 			
 		} 
 		else if(id == R.id.test_alert)
 		{
-			Message msg = Message.obtain();
-			msg.obj = "TEST ALARM";
-			try 
-			{
-				messenger.send(msg);
-			} 
-			catch (RemoteException e) 
-			{
-				e.printStackTrace();
-			}
+			turnOffAllNoti();
 		}
 		else 
 		{
@@ -108,6 +98,21 @@ public class ButtonController implements OnClickListener, OnTouchListener
 		
 		
 		
+	}
+	
+	public void turnOffAllNoti()
+	{
+		Message msg = Message.obtain();
+		msg.arg1 = !swap ? 1 : 0;
+		swap ^= true;
+		try 
+		{
+			messenger.send(msg);
+		} 
+		catch (RemoteException e) 
+		{
+			e.printStackTrace();
+		}
 	}
 
 }
