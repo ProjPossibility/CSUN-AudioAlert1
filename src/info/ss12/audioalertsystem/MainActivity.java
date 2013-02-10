@@ -26,24 +26,27 @@ import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Switch;
-import android.widget.Toast;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.view.MenuItem;
-import android.content.SharedPreferences;
 
 public class MainActivity extends Activity
 {
 	public static final String AUDIO_PREF = "AUDIO_PREF";
 	public static final String PHONE_LIST = "PHONE_LIST";
+	public static final String NOTIFICATION = "NOT";
+	public static final String SCREEN_FLASH = "SCR";
+	public static final String VIBRATE = "VBR";
+	public static final String CAMERA = "CAM";
+	public static final String TEXT = "TXT";
 	private final String TAG = "Main Activity";
 	private boolean alarmActivated = false;
 	private boolean onSettingScreen;
@@ -55,7 +58,7 @@ public class MainActivity extends Activity
 	private Switch micSwitch;
 	private Button testAlert;
 	private MenuItem settings;
-	
+
 	private ListView listView;
 	private ArrayAdapter<String> adapter;
 
@@ -70,6 +73,8 @@ public class MainActivity extends Activity
 
 	private GPSAlert gpsAlert;
 	private Intent intent; // Used for Service
+	
+	private View settingsView = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -78,42 +83,50 @@ public class MainActivity extends Activity
 		setContentView(R.layout.activity_main);
 		// Restore preferences
 		SharedPreferences settings = getSharedPreferences(AUDIO_PREF, 0);
+		screenFlashAlert = settings.getBoolean(SCREEN_FLASH, true);
+		vibrateAlert = settings.getBoolean(VIBRATE, true);
+		cameraFlashAlert = settings.getBoolean(CAMERA, true);
+		notificationsAlert = settings.getBoolean(NOTIFICATION, true);
+		txtMessageAlert = settings.getBoolean(TEXT, true);
 		Set<String> phoneList = settings.getStringSet(PHONE_LIST, null);
 		List<String> phones = new ArrayList<String>(phoneList);
 		listView = (ListView) findViewById(R.id.phone_list);
-		adapter = new ArrayAdapter<String>(this,R.layout.cell_layout, R.id.phone_view, phones);
-		
+		adapter = new ArrayAdapter<String>(this, R.layout.cell_layout,
+				R.id.phone_view, phones);
 
 		listView.setOnItemClickListener(new OnItemClickListener()
 		{
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
-					long arg3)
+			public void onItemClick(AdapterView<?> arg0, View arg1,
+					int position, long arg3)
 			{
-				adapter.remove(adapter.getItem(position));				
+				adapter.remove(adapter.getItem(position));
 			}
-			
+
 		});
 		listView.setAdapter(adapter);
-		
+
 		Button add = (Button) findViewById(R.id.add_phone_button);
 		add.setOnClickListener(new View.OnClickListener()
 		{
-			
+
 			@Override
 			public void onClick(View v)
 			{
-				AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						MainActivity.this);
 				// Get the layout inflater
 				LayoutInflater inflater = getLayoutInflater();
 
 				// Inflate and set the layout for the dialog
 				// Pass null as the parent view because its going in the dialog
 				// layout
-				
-				final View view = inflater.inflate(R.layout.phone_entry_layout, null);
-				final EditText phoneEntry = (EditText) view.findViewById(R.id.phone_entry);
+
+				final View view = inflater.inflate(R.layout.phone_entry_layout,
+						null);
+				final EditText phoneEntry = (EditText) view
+						.findViewById(R.id.phone_entry);
 				builder.setView(view);
 				// Add action buttons
 				builder.setPositiveButton("Add Phone",
@@ -129,7 +142,7 @@ public class MainActivity extends Activity
 				builder.show();
 			}
 		});
-		
+
 		intent = new Intent(this, LocalService.class);
 		buttonControl = new ButtonController(this, intent);
 		micSwitch = (Switch) findViewById(R.id.mic_switch);
@@ -138,13 +151,8 @@ public class MainActivity extends Activity
 
 		testAlert = (Button) findViewById(R.id.test_alert);
 		testAlert.setOnClickListener(buttonControl);
-		 /*((CheckBox)findViewById(R.id.notifications)).setOnClickListener(buttonControl);
-		 ((CheckBox)findViewById(R.id.screen_flash)).setOnClickListener(buttonControl);
-		 ((CheckBox)findViewById(R.id.vibrate)).setOnClickListener(buttonControl);
-		 ((CheckBox)findViewById(R.id.camera_flash)).setOnClickListener(buttonControl);
-		 ((CheckBox)findViewById(R.id.txt_message)).setOnClickListener(buttonControl) ;*/
+		
 
-	
 		vibrate = new VibrateNotification(this);
 		flash = new FlashNotification(this);
 
@@ -174,12 +182,16 @@ public class MainActivity extends Activity
 
 			if (msg.arg1 == 1 && !alarmActivated) // Turn On
 			{
-				if (((CheckBox)findViewById(R.id.notifications)).isChecked()) bar.startNotify();
-				if (((CheckBox)findViewById(R.id.screen_flash)).isChecked()) flash.startNotify();
-				if (((CheckBox)findViewById(R.id.vibrate)).isChecked()) vibrate.startNotify();
-				if (((CheckBox)findViewById(R.id.camera_flash)).isChecked()) cameraLight.startNotify();
+				if (notificationsAlert)
+					bar.startNotify();
+				if (screenFlashAlert)
+					flash.startNotify();
+				if (vibrateAlert)
+					vibrate.startNotify();
+				if (cameraFlashAlert)
+					cameraLight.startNotify();
 				List<String> phoneNumbers = new ArrayList<String>();
-				for(int i = 0; i < adapter.getCount(); i++)
+				for (int i = 0; i < adapter.getCount(); i++)
 				{
 					phoneNumbers.add(adapter.getItem(i));
 				}
@@ -193,11 +205,17 @@ public class MainActivity extends Activity
 			}
 			else if (msg.arg1 == 0 && alarmActivated)
 			{
-				if (((CheckBox)findViewById(R.id.notifications)).isChecked()) bar.stopNotify();
-				if (((CheckBox)findViewById(R.id.screen_flash)).isChecked()) flash.stopNotify();
-				if (((CheckBox)findViewById(R.id.vibrate)).isChecked()) vibrate.stopNotify();
-				if (((CheckBox)findViewById(R.id.camera_flash)).isChecked()) cameraLight.stopNotify();
-				if (((CheckBox)findViewById(R.id.txt_message)).isChecked()) text.stopNotify();
+				if (notificationsAlert)
+					bar.stopNotify();
+				if (screenFlashAlert)
+					flash.stopNotify();
+				if (vibrateAlert)
+					vibrate.stopNotify();
+				if (cameraFlashAlert)
+					cameraLight.stopNotify();
+				if (txtMessageAlert)
+					text.stopNotify();
+				
 				alarmActivated = false;
 			}
 			Log.d(TAG, "FIRE ALARM DETECTED");
@@ -253,7 +271,14 @@ public class MainActivity extends Activity
 	@Override
 	public void onBackPressed()
 	{
-		/*AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		if (onSettingScreen)
+		{
+			this.setContentView(R.layout.activity_main);
+			onSettingScreen = false;
+			return;
+		}
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Exit");
 		builder.setMessage("Exit application and disable service monitor? (You can press home to move to background)");
 		builder.setPositiveButton("Exit", new DialogInterface.OnClickListener()
@@ -266,34 +291,34 @@ public class MainActivity extends Activity
 			}
 		});
 		builder.setNegativeButton("Cancel", null);
-		builder.show();*/
-		if(onSettingScreen)
-			this.setContentView(R.layout.activity_main);
-			
+		builder.show();
 	}
 
-	
-	
 	@Override
 	protected void onStop()
 	{
 		SharedPreferences settings = getSharedPreferences(AUDIO_PREF, 0);
-	    SharedPreferences.Editor editor = settings.edit();
-	    editor.putStringSet(PHONE_LIST, getPhoneNumberList());
-	    editor.commit();
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putStringSet(PHONE_LIST, getPhoneNumberList());
+		editor.putBoolean(NOTIFICATION, notificationsAlert);
+		editor.putBoolean(SCREEN_FLASH, screenFlashAlert);
+		editor.putBoolean(VIBRATE, vibrateAlert);
+		editor.putBoolean(CAMERA, cameraFlashAlert);
+		editor.putBoolean(TEXT, txtMessageAlert);
+		editor.commit();
 		super.onStop();
 	}
 
 	public Set<String> getPhoneNumberList()
 	{
 		Set<String> phones = new TreeSet<String>();
-		for(int i = 0; i < adapter.getCount();  i ++)
+		for (int i = 0; i < adapter.getCount(); i++)
 		{
 			phones.add(adapter.getItem(i).toString());
 		}
 		return phones;
 	}
-	
+
 	@Override
 	protected void onDestroy()
 	{
@@ -301,11 +326,59 @@ public class MainActivity extends Activity
 		stopService(intent);
 		super.onDestroy();
 	}
+
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		this.setContentView(R.layout.settings);
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		if(settingsView == null)
+		{
+			settingsView = getLayoutInflater().inflate(R.layout.settings, null);
+			SettingClickListener settingClickListener = new SettingClickListener();
+			((CheckBox)settingsView.findViewById(R.id.notifications)).setOnClickListener(settingClickListener);
+			((CheckBox)settingsView.findViewById(R.id.screen_flash)).setOnClickListener(settingClickListener);
+			((CheckBox)settingsView.findViewById(R.id.vibrate)).setOnClickListener(settingClickListener);
+			((CheckBox)settingsView.findViewById(R.id.camera_flash)).setOnClickListener(settingClickListener);
+			((CheckBox)settingsView.findViewById(R.id.txt_message)).setOnClickListener(settingClickListener) ;
+		}
+		setContentView(settingsView);
+		 ((CheckBox)findViewById(R.id.notifications)).setChecked(notificationsAlert);
+		 ((CheckBox)findViewById(R.id.screen_flash)).setChecked(screenFlashAlert);
+		 ((CheckBox)findViewById(R.id.vibrate)).setChecked(vibrateAlert);
+		 ((CheckBox)findViewById(R.id.camera_flash)).setChecked(cameraFlashAlert);
+		 ((CheckBox)findViewById(R.id.txt_message)).setChecked(txtMessageAlert);
 		onSettingScreen = true;
 		return false;
+	}
+	
+	public class SettingClickListener implements OnClickListener
+	{
+
+		@Override
+		public void onClick(View v)
+		{
+			int id = v.getId();
+			if(id == R.id.notifications)
+			{
+				notificationsAlert =((CheckBox)v).isChecked(); 
+			}
+			if(id == R.id.screen_flash)
+			{
+				screenFlashAlert =((CheckBox)v).isChecked(); 
+			}
+			if(id == R.id.vibrate)
+			{
+				vibrateAlert =((CheckBox)v).isChecked(); 
+			}
+			if(id == R.id.camera_flash)
+			{
+				cameraFlashAlert =((CheckBox)v).isChecked(); 
+			}
+			if(id == R.id.txt_message)
+			{
+				txtMessageAlert =((CheckBox)v).isChecked(); 
+			}
+		}
+		
 	}
 
 }
