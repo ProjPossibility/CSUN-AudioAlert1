@@ -1,5 +1,7 @@
 package info.ss12.audioalertsystem;
 
+import info.ss12.audioalertsystem.notification.VibrateNotification;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -20,6 +22,7 @@ public class MainActivity extends Activity implements OnSignalsDetectedListener
 	
 	private Switch micSwitch;
 	private ButtonController buttonControl;
+	private VibrateNotification vibrateNotification;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -30,7 +33,7 @@ public class MainActivity extends Activity implements OnSignalsDetectedListener
 		micSwitch = (Switch )findViewById(R.id.mic_switch);
 		micSwitch.setOnClickListener(buttonControl);
 		micSwitch.setOnTouchListener(buttonControl);
-
+		vibrateNotification = new VibrateNotification();
 	}
 
 	@Override
@@ -46,34 +49,10 @@ public class MainActivity extends Activity implements OnSignalsDetectedListener
 	{
 		if(alarmActivated)
 			return;
-		
 		alarmActivated = true;
 		
-		
-		Timer timer = new Timer();
-		timer.schedule(new TimerTask() {
+		vibrateNotification.startNotify();
 			
-			@Override
-			public void run() {
-				runOnUiThread(new Runnable() 
-				{
-					
-					@Override
-					public void run() 
-					{
-						mainLayout = (LinearLayout) findViewById(R.id.layout_main);
-						
-						mainLayout.setBackgroundColor(swap ? Color.RED : Color.WHITE);
-						swap ^= true;
-					}
-				});
-				
-			}
-		}, 0, 500);
-		
-		
-		
-
 		Log.d(TAG, "FIRE ALARM DETECTED");		
 	}
 
