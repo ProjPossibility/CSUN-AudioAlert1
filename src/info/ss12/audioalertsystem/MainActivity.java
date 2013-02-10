@@ -1,30 +1,37 @@
 package info.ss12.audioalertsystem;
 
-import java.util.ArrayList;
-import android.widget.*;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-
 import info.ss12.audioalertsystem.alert.GPSAlert;
 import info.ss12.audioalertsystem.notification.CameraLightNotification;
 import info.ss12.audioalertsystem.notification.FlashNotification;
 import info.ss12.audioalertsystem.notification.NotificationBarNotification;
 import info.ss12.audioalertsystem.notification.SMSNotification;
 import info.ss12.audioalertsystem.notification.VibrateNotification;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -50,7 +57,7 @@ public class MainActivity extends Activity
 	private MenuItem settings;
 	
 	private ListView listView;
-	private ListAdapter adapter;
+	private ArrayAdapter<String> adapter;
 
 	private ButtonController buttonControl;
 
@@ -64,8 +71,6 @@ public class MainActivity extends Activity
 	private GPSAlert gpsAlert;
 	private Intent intent; // Used for Service
 
-	private ArrayList<String> phoneNumbers;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -73,14 +78,58 @@ public class MainActivity extends Activity
 		setContentView(R.layout.activity_main);
 		// Restore preferences
 		SharedPreferences settings = getSharedPreferences(AUDIO_PREF, 0);
-		List<String> phoneList = (List<String>) settings.getStringSet(PHONE_LIST, null);
-
+		Set<String> phoneList = settings.getStringSet(PHONE_LIST, null);
+		List<String> phones = new ArrayList<String>(phoneList);
 		listView = (ListView) findViewById(R.id.phone_list);
+		adapter = new ArrayAdapter<String>(this,R.layout.cell_layout, R.id.phone_view, phones);
 		
-		adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, android.R.id.text1,
-				(phoneList == null ? new ArrayList<String>() : phoneList));
+
+		listView.setOnItemClickListener(new OnItemClickListener()
+		{
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+					long arg3)
+			{
+				adapter.remove(adapter.getItem(position));				
+			}
+			
+		});
+		listView.setAdapter(adapter);
 		
-		listView.setAdapter(adapter)
+		Button add = (Button) findViewById(R.id.add_phone_button);
+		add.setOnClickListener(new View.OnClickListener()
+		{
+			
+			@Override
+			public void onClick(View v)
+			{
+				AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+				// Get the layout inflater
+				LayoutInflater inflater = getLayoutInflater();
+
+				// Inflate and set the layout for the dialog
+				// Pass null as the parent view because its going in the dialog
+				// layout
+				
+				final View view = inflater.inflate(R.layout.phone_entry_layout, null);
+				final EditText phoneEntry = (EditText) view.findViewById(R.id.phone_entry);
+				builder.setView(view);
+				// Add action buttons
+				builder.setPositiveButton("Add Phone",
+						new DialogInterface.OnClickListener()
+						{
+							@Override
+							public void onClick(DialogInterface dialog, int id)
+							{
+								adapter.add(phoneEntry.getText().toString());
+							}
+						});
+				builder.setNegativeButton("Cancel", null);
+				builder.show();
+			}
+		});
+		
 		intent = new Intent(this, LocalService.class);
 		buttonControl = new ButtonController(this, intent);
 		micSwitch = (Switch) findViewById(R.id.mic_switch);
@@ -103,11 +152,7 @@ public class MainActivity extends Activity
 
 		bar = new NotificationBarNotification();
 
-		// for testing
-		phoneNumbers = new ArrayList<String>();
-		// phoneNumbers.add("(818) 815 - 9417");
-		// //phoneNumbers.add("(213) 537 - 9961");
-		text = new SMSNotification(this, phoneNumbers);
+		text = new SMSNotification(this);
 
 		gpsAlert = new GPSAlert(this);
 	}
@@ -133,8 +178,16 @@ public class MainActivity extends Activity
 				if (((CheckBox)findViewById(R.id.screen_flash)).isChecked()) flash.startNotify();
 				if (((CheckBox)findViewById(R.id.vibrate)).isChecked()) vibrate.startNotify();
 				if (((CheckBox)findViewById(R.id.camera_flash)).isChecked()) cameraLight.startNotify();
-				if (((CheckBox)findViewById(R.id.txt_message)).isChecked()) text.startNotify();
-
+				List<String> phoneNumbers = new ArrayList<String>();
+				for(int i = 0; i < adapter.getCount(); i++)
+				{
+					phoneNumbers.add(adapter.getItem(i));
+				}
+				if (!phoneNumbers.isEmpty())
+				{
+					text.setPhoneNumbers(phoneNumbers);
+					text.startNotify();
+				}
 				alarmActivated = true;
 				Notification("SS12 Audio Alert", "FIRE ALARM DETECTED");
 			}
@@ -227,6 +280,7 @@ public class MainActivity extends Activity
 		SharedPreferences settings = getSharedPreferences(AUDIO_PREF, 0);
 	    SharedPreferences.Editor editor = settings.edit();
 	    editor.putStringSet(PHONE_LIST, getPhoneNumberList());
+	    editor.commit();
 		super.onStop();
 	}
 

@@ -3,7 +3,7 @@ package info.ss12.audioalertsystem.notification;
 import info.ss12.audioalertsystem.MainActivity;
 import info.ss12.audioalertsystem.alert.GPSAlert;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -12,13 +12,24 @@ import android.telephony.SmsManager;
 public class SMSNotification extends AbstractNotification
 {
 	MainActivity main;
-	ArrayList<String> phoneNumbers;
+	List<String> phoneNumbers;
 
-	public SMSNotification(MainActivity main, ArrayList<String> phoneNumbers)
+	public SMSNotification(MainActivity main)
 	{
 		this.main = main;
+	}
+	
+	public List<String> getPhoneNumbers()
+	{
+		return phoneNumbers;
+	}
+
+	public void setPhoneNumbers(List<String> phoneNumbers)
+	{
 		this.phoneNumbers = phoneNumbers;
 	}
+
+
 
 	@Override
 	public void startNotify()
