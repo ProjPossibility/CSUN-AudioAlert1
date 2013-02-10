@@ -6,19 +6,20 @@ import android.os.Vibrator;
 public class VibrateNotification extends AbstractNotification {
 	
 	Vibrator vibrator;
+	Context context;
 	
-	public VibrateNotification(Context context) {
-		vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
+	public VibrateNotification() {
+		//vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
 	}
 	
 	@Override
 	public void startNotify(){
-		vibrator.vibrate(new long[]{0, 1000}, 1);
+		//vibrator.vibrate(new long[]{0, 1000}, 1);
 	}
 	
 	@Override
 	public void stopNotify(){
-		vibrator.cancel();
+		//vibrator.cancel();
 	}
 
 }
