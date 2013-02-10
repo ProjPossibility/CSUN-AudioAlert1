@@ -1,7 +1,13 @@
 package info.ss12.audioalertsystem;
 
+import info.ss12.audioalertsystem.alert.AbstractAlert;
+import info.ss12.audioalertsystem.alert.AlertListener;
+import info.ss12.audioalertsystem.notification.FlashNotification;
+import info.ss12.audioalertsystem.notification.NotificationBarNotification;
 import info.ss12.audioalertsystem.notification.VibrateNotification;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -14,15 +20,24 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 
-public class MainActivity extends Activity implements OnSignalsDetectedListener
+public class MainActivity extends Activity
 {
 	private final String TAG = "Main Activity";
 	private boolean alarmActivated = false;
 	private LinearLayout mainLayout;
 	
+	
 	private Switch micSwitch;
+	private Button testAlert;
+	
 	private ButtonController buttonControl;
 	private VibrateNotification vibrateNotification;
+	
+	private VibrateNotification vibrate;
+	private FlashNotification flash;
+	private NotificationBarNotification bar;
+	
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -33,7 +48,13 @@ public class MainActivity extends Activity implements OnSignalsDetectedListener
 		micSwitch = (Switch )findViewById(R.id.mic_switch);
 		micSwitch.setOnClickListener(buttonControl);
 		micSwitch.setOnTouchListener(buttonControl);
-		vibrateNotification = new VibrateNotification();
+
+		testAlert = (Button)findViewById(R.id.test_alert);
+		testAlert.setOnClickListener(buttonControl);
+		
+		vibrate = new VibrateNotification();
+		flash = new FlashNotification();
+		bar = new NotificationBarNotification();		
 	}
 
 	@Override
@@ -43,17 +64,11 @@ public class MainActivity extends Activity implements OnSignalsDetectedListener
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
-	boolean swap = false;
-	@Override
-	public void onAlarmDetector()
-	{
-		if(alarmActivated)
-			return;
-		alarmActivated = true;
-		
-		vibrateNotification.startNotify();
-			
-		Log.d(TAG, "FIRE ALARM DETECTED");		
-	}
 
+	public void onAlarmDetected()
+	{
+		bar.startNotify();
+		flash.startNotify();
+		vibrate.startNotify();
+	}
 }

@@ -13,9 +13,9 @@ import android.widget.Switch;
 public class ButtonController implements OnClickListener, OnTouchListener
 {
 	private final String TAG = "Button Controller";
-	private Activity mainActivity;
+	private MainActivity mainActivity;
 	
-	public ButtonController(Activity mainActivity)
+	public ButtonController(MainActivity mainActivity)
 	{
 		this.mainActivity = mainActivity;
 	}
@@ -74,6 +74,10 @@ public class ButtonController implements OnClickListener, OnTouchListener
 			}
 			
 		} 
+		else if(id == R.id.test_alert)
+		{
+			mainActivity.onAlarmDetected();
+		}
 		else 
 		{
 			Log.d("swtich button test", "default");
