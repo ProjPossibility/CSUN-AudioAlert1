@@ -1,6 +1,5 @@
 package info.ss12.audioalertsystem;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Message;
