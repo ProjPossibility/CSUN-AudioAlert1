@@ -1,6 +1,5 @@
 package info.ss12.audioalertsystem;
 
-import android.content.Context;
 
 
 public class DetectorServiceHelper
