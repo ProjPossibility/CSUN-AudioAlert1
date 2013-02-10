@@ -2,7 +2,6 @@ package info.ss12.audioalertsystem.notification;
 
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
-import info.ss12.audioalertsystem.MainActivity;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -12,14 +11,12 @@ public class CameraLightNotification extends AbstractNotification {
 	private Camera camera;
 	private Parameters pars;
 	private Timer timer;
-	private MainActivity activity;
 	private boolean lightToggle;
 	
-	public CameraLightNotification(MainActivity a) {
+	public CameraLightNotification() {
 		camera = Camera.open();
 		pars = camera.getParameters();
 		timer = new Timer();
-		activity = a;
 		lightToggle = false;
 	}
 	
@@ -30,16 +27,11 @@ public class CameraLightNotification extends AbstractNotification {
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				activity.runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						if (lightToggle)
-							camera.startPreview();
-						else
-							camera.stopPreview();
-						lightToggle ^= true;
-					}
-				});
+				if (lightToggle)
+					camera.startPreview();
+				else
+					camera.stopPreview();
+				lightToggle ^= true;
 			}
 		}, 0, 500);
 	}
@@ -47,6 +39,5 @@ public class CameraLightNotification extends AbstractNotification {
 	@Override
 	public void stopNotify() {
 		camera.stopPreview();
-		camera.release();
 	}
 }
