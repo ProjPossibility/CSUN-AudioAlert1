@@ -1,3 +1,8 @@
+/**
+ * @author SS12 Orange Team 
+ * The FlashNotification class starts and stops the screen flash 
+ * 
+ */
 package info.ss12.audioalertsystem.notification;
 
 import info.ss12.audioalertsystem.*;
@@ -17,9 +22,9 @@ public class FlashNotification extends AbstractNotification {
 		this.mainActivity = mainActivity;
 	}
 	
+	//starts the screen flash notification on run thread
 	@Override
 	public void startNotify(){
-		Log.d("In notify","Now");
 		timer = new Timer();
 		timer.schedule(new TimerTask() {
 			@Override
@@ -30,6 +35,7 @@ public class FlashNotification extends AbstractNotification {
 					@Override
 					public void run() 
 					{
+						//sets timer to swap color every 500ms
 						LinearLayout layout = (LinearLayout) mainActivity.findViewById(R.id.layout_main);
 						layout.setBackgroundColor(swap ? Color.RED : Color.WHITE);
 						swap ^= true;
@@ -40,6 +46,7 @@ public class FlashNotification extends AbstractNotification {
 		}, 0, 500);	
 	}
 	
+	//stops screen flash and sets background color to white
 	@Override
 	public void stopNotify(){
 		timer.cancel();
