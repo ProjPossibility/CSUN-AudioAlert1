@@ -1,7 +1,7 @@
 package info.ss12.audioalertsystem;
 
 import java.util.ArrayList;
-
+import android.widget.*;
 import info.ss12.audioalertsystem.notification.CameraLightNotification;
 import info.ss12.audioalertsystem.notification.FlashNotification;
 import info.ss12.audioalertsystem.notification.NotificationBarNotification;
@@ -23,7 +23,6 @@ import android.widget.Toast;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.MenuItem;
-
 public class MainActivity extends Activity
 {
 	private final String TAG = "Main Activity";
@@ -68,6 +67,12 @@ public class MainActivity extends Activity
 
 		testAlert = (Button)findViewById(R.id.test_alert);
 		testAlert.setOnClickListener(buttonControl);
+		 /*((CheckBox)findViewById(R.id.notifications)).setOnClickListener(buttonControl);
+		 ((CheckBox)findViewById(R.id.screen_flash)).setOnClickListener(buttonControl);
+		 ((CheckBox)findViewById(R.id.vibrate)).setOnClickListener(buttonControl);
+		 ((CheckBox)findViewById(R.id.camera_flash)).setOnClickListener(buttonControl);
+		 ((CheckBox)findViewById(R.id.txt_message)).setOnClickListener(buttonControl) ;*/
+
 	
 		vibrate = new VibrateNotification(this);
 		flash = new FlashNotification(this);
@@ -103,22 +108,22 @@ public class MainActivity extends Activity
 			
 			if(msg.arg1 == 1 && !alarmActivated) // Turn On
 			{
-				if ((CheckBox)findViewById(R.id.notificiations).isChecked()) bar.startNotify();
-				if ((CheckBox)findViewById(R.id.screen_flash).isChecked()) flash.startNotify();
-				if ((CheckBox)findViewById(R.id.vibrate).isChecked()) vibrate.startNotify();
-				if ((CheckBox)findViewById(R.id.camera_flash).isChecked()) cameraLight.startNotify();
-				if ((CheckBox)findViewById(R.id.txt_message).isChecked()) text.startNotify();
+				if (((CheckBox)findViewById(R.id.notifications)).isChecked()) bar.startNotify();
+				if (((CheckBox)findViewById(R.id.screen_flash)).isChecked()) flash.startNotify();
+				if (((CheckBox)findViewById(R.id.vibrate)).isChecked()) vibrate.startNotify();
+				if (((CheckBox)findViewById(R.id.camera_flash)).isChecked()) cameraLight.startNotify();
+				if (((CheckBox)findViewById(R.id.txt_message)).isChecked()) text.startNotify();
 
 				alarmActivated = true;
 				Notification("SS12 Audio Alert","FIRE ALARM DETECTED");
 			}
 			else if(msg.arg1 == 0 && alarmActivated)
 			{
-				if ((CheckBox)findViewById(R.id.notificiations).isChecked()) bar.stopNotify();
-				if ((CheckBox)findViewById(R.id.screen_flash).isChecked()) flash.stopNotify();
-				if ((CheckBox)findViewById(R.id.vibrate).isChecked()) vibrate.stopNotify();
-				if ((CheckBox)findViewById(R.id.camera_flash).isChecked()) cameraLight.stopNotify();
-				if ((CheckBox)findViewById(R.id.txt_message).isChecked()) text.stopNotify();
+				if (((CheckBox)findViewById(R.id.notifications)).isChecked()) bar.stopNotify();
+				if (((CheckBox)findViewById(R.id.screen_flash)).isChecked()) flash.stopNotify();
+				if (((CheckBox)findViewById(R.id.vibrate)).isChecked()) vibrate.stopNotify();
+				if (((CheckBox)findViewById(R.id.camera_flash)).isChecked()) cameraLight.stopNotify();
+				if (((CheckBox)findViewById(R.id.txt_message)).isChecked()) text.stopNotify();
 				alarmActivated = false;
 			}
 			Log.d(TAG, "FIRE ALARM DETECTED");	
