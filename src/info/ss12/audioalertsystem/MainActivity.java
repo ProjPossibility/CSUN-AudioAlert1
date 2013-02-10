@@ -1,15 +1,22 @@
 package info.ss12.audioalertsystem;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import android.os.Bundle;
 import android.app.Activity;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.Menu;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 
 public class MainActivity extends Activity implements OnSignalsDetectedListener
 {
 	private final String TAG = "Main Activity";
 	private boolean alarmActivated = false;
+	private LinearLayout mainLayout;
 	
 	private Switch micSwitch;
 	private ButtonController buttonControl;
@@ -33,7 +40,7 @@ public class MainActivity extends Activity implements OnSignalsDetectedListener
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
-
+	boolean swap = false;
 	@Override
 	public void onAlarmDetector()
 	{
@@ -41,7 +48,32 @@ public class MainActivity extends Activity implements OnSignalsDetectedListener
 			return;
 		
 		alarmActivated = true;
+		
+		
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask() {
+			
+			@Override
+			public void run() {
+				runOnUiThread(new Runnable() 
+				{
+					
+					@Override
+					public void run() 
+					{
+						mainLayout = (LinearLayout) findViewById(R.id.layout_main);
+						
+						mainLayout.setBackgroundColor(swap ? Color.RED : Color.WHITE);
+						swap ^= true;
+					}
+				});
 				
+			}
+		}, 0, 500);
+		
+		
+		
+
 		Log.d(TAG, "FIRE ALARM DETECTED");		
 	}
 

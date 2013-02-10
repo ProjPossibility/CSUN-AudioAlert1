@@ -1,7 +1,6 @@
 package info.ss12.audioalertsystem;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -74,7 +73,9 @@ public class ButtonController implements OnClickListener, OnTouchListener
 				DetectorServiceHelper.stopServices();
 			}
 			
-		} else {
+		} 
+		else 
+		{
 			Log.d("swtich button test", "default");
 		}
 		
