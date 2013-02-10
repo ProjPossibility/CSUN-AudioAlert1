@@ -46,7 +46,7 @@ public class MainActivity extends Activity
 		vibrate = new VibrateNotification(this);
 		flash = new FlashNotification(this);
 		bar = new NotificationBarNotification();
-		cameraLight = new CameraLightNotification(this);
+		cameraLight = new CameraLightNotification();
 	}
 
 	@Override
