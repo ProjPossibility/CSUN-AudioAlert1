@@ -2,6 +2,10 @@ package info.ss12.audioalertsystem;
 
 import java.util.ArrayList;
 import android.widget.*;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
 import info.ss12.audioalertsystem.alert.GPSAlert;
 import info.ss12.audioalertsystem.notification.CameraLightNotification;
 import info.ss12.audioalertsystem.notification.FlashNotification;
@@ -18,14 +22,21 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.Toast;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.MenuItem;
+import android.content.SharedPreferences;
+
 public class MainActivity extends Activity
 {
+	public static final String AUDIO_PREF = "AUDIO_PREF";
+	public static final String PHONE_LIST = "PHONE_LIST";
 	private final String TAG = "Main Activity";
 	private boolean alarmActivated = false;
 	private boolean onSettingScreen;
@@ -38,6 +49,9 @@ public class MainActivity extends Activity
 	private Button testAlert;
 	private MenuItem settings;
 	
+	private ListView listView;
+	private ListAdapter adapter;
+
 	private ButtonController buttonControl;
 
 	private VibrateNotification vibrate;
@@ -46,18 +60,27 @@ public class MainActivity extends Activity
 
 	private CameraLightNotification cameraLight;
 	private SMSNotification text;
-	
+
 	private GPSAlert gpsAlert;
 	private Intent intent; // Used for Service
 
-	private ArrayList <String> phoneNumbers;
+	private ArrayList<String> phoneNumbers;
 
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		// Restore preferences
+		SharedPreferences settings = getSharedPreferences(AUDIO_PREF, 0);
+		List<String> phoneList = (List<String>) settings.getStringSet(PHONE_LIST, null);
+
+		listView = (ListView) findViewById(R.id.phone_list);
+		
+		adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, android.R.id.text1,
+				(phoneList == null ? new ArrayList<String>() : phoneList));
+		
+		listView.setAdapter(adapter)
 		intent = new Intent(this, LocalService.class);
 		buttonControl = new ButtonController(this, intent);
 		micSwitch = (Switch) findViewById(R.id.mic_switch);
@@ -76,17 +99,15 @@ public class MainActivity extends Activity
 		vibrate = new VibrateNotification(this);
 		flash = new FlashNotification(this);
 
-		
 		cameraLight = new CameraLightNotification();
 
 		bar = new NotificationBarNotification();
-		
-		
-//		//for testing
-//		phoneNumbers = new ArrayList<String>();
-//		phoneNumbers.add("(818) 815 - 9417");
-//		//phoneNumbers.add("(213) 537 - 9961");
-//		text = new SMSNotification(this, phoneNumbers, "message goes here");
+
+		// for testing
+		phoneNumbers = new ArrayList<String>();
+		// phoneNumbers.add("(818) 815 - 9417");
+		// //phoneNumbers.add("(213) 537 - 9961");
+		text = new SMSNotification(this, phoneNumbers);
 
 		gpsAlert = new GPSAlert(this);
 	}
@@ -198,6 +219,27 @@ public class MainActivity extends Activity
 			
 	}
 
+	
+	
+	@Override
+	protected void onStop()
+	{
+		SharedPreferences settings = getSharedPreferences(AUDIO_PREF, 0);
+	    SharedPreferences.Editor editor = settings.edit();
+	    editor.putStringSet(PHONE_LIST, getPhoneNumberList());
+		super.onStop();
+	}
+
+	public Set<String> getPhoneNumberList()
+	{
+		Set<String> phones = new TreeSet<String>();
+		for(int i = 0; i < adapter.getCount();  i ++)
+		{
+			phones.add(adapter.getItem(i).toString());
+		}
+		return phones;
+	}
+	
 	@Override
 	protected void onDestroy()
 	{
