@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.widget.Button;
 import android.widget.Switch;
+import android.content.Context;
 
 public class MainActivity extends Activity
 {
@@ -23,11 +24,10 @@ public class MainActivity extends Activity
 	
 	private ButtonController buttonControl;
 	
+	private Context context;
 	private VibrateNotification vibrate;
 	private FlashNotification flash;
 	private NotificationBarNotification bar;
-	
-	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -42,7 +42,8 @@ public class MainActivity extends Activity
 		testAlert = (Button)findViewById(R.id.test_alert);
 		testAlert.setOnClickListener(buttonControl);
 		
-		vibrate = new VibrateNotification();
+		context = this.getApplicationContext();
+		vibrate = new VibrateNotification(context);
 		flash = new FlashNotification();
 		bar = new NotificationBarNotification();		
 	}
