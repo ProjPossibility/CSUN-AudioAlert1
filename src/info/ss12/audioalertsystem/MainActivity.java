@@ -95,21 +95,22 @@ public class MainActivity extends Activity
 			
 			if(msg.arg1 == 1 && !alarmActivated) // Turn On
 			{
-				bar.startNotify();
-				flash.startNotify();
-				vibrate.startNotify();
-				cameraLight.startNotify();
-				text.startNotify();
+				if ((CheckBox)findViewById(R.id.notificiations).isChecked()) bar.startNotify();
+				if ((CheckBox)findViewById(R.id.screen_flash).isChecked()) flash.startNotify();
+				if ((CheckBox)findViewById(R.id.vibrate).isChecked()) vibrate.startNotify();
+				if ((CheckBox)findViewById(R.id.camera_flash).isChecked()) cameraLight.startNotify();
+				if ((CheckBox)findViewById(R.id.txt_message).isChecked()) text.startNotify();
 
 				alarmActivated = true;
 				Notification("SS12 Audio Alert","FIRE ALARM DETECTED");
 			}
 			else if(msg.arg1 == 0 && alarmActivated)
 			{
-				bar.stopNotify();
-				flash.stopNotify();
-				vibrate.stopNotify();
-				cameraLight.stopNotify();
+				if ((CheckBox)findViewById(R.id.notificiations).isChecked()) bar.stopNotify();
+				if ((CheckBox)findViewById(R.id.screen_flash).isChecked()) flash.stopNotify();
+				if ((CheckBox)findViewById(R.id.vibrate).isChecked()) vibrate.stopNotify();
+				if ((CheckBox)findViewById(R.id.camera_flash).isChecked()) cameraLight.stopNotify();
+				if ((CheckBox)findViewById(R.id.txt_message).isChecked()) text.stopNotify();
 				alarmActivated = false;
 			}
 			Log.d(TAG, "FIRE ALARM DETECTED");	
