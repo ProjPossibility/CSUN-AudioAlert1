@@ -41,6 +41,7 @@ public class FlashNotification extends AbstractNotification {
 	
 	@Override
 	public void stopNotify(){
-		
+		LinearLayout layout = (LinearLayout) mainActivity.findViewById(R.id.layout_main);
+		layout.setBackgroundColor(Color.WHITE);
 	}
 }
