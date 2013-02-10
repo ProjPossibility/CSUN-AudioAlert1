@@ -2,6 +2,7 @@ package info.ss12.audioalertsystem;
 
 import java.util.ArrayList;
 import android.widget.*;
+import info.ss12.audioalertsystem.alert.GPSAlert;
 import info.ss12.audioalertsystem.notification.CameraLightNotification;
 import info.ss12.audioalertsystem.notification.FlashNotification;
 import info.ss12.audioalertsystem.notification.NotificationBarNotification;
@@ -33,13 +34,12 @@ public class MainActivity extends Activity
 	private boolean cameraFlashAlert;
 	private boolean notificationsAlert;
 	private boolean txtMessageAlert;
-	
 	private Switch micSwitch;
 	private Button testAlert;
 	private MenuItem settings;
 	
 	private ButtonController buttonControl;
-	
+
 	private VibrateNotification vibrate;
 	private FlashNotification flash;
 	private NotificationBarNotification bar;
@@ -51,6 +51,9 @@ public class MainActivity extends Activity
 
 	private SMSNotification text;
 	
+	private GPSAlert gpsAlert;
+	private Intent intent; // Used for Service
+
 	private ArrayList <String> phoneNumbers;
 
 	
@@ -61,11 +64,11 @@ public class MainActivity extends Activity
 		setContentView(R.layout.activity_main);
 		intent = new Intent(this, LocalService.class);
 		buttonControl = new ButtonController(this, intent);
-		micSwitch = (Switch )findViewById(R.id.mic_switch);
+		micSwitch = (Switch) findViewById(R.id.mic_switch);
 		micSwitch.setOnClickListener(buttonControl);
 		micSwitch.setOnTouchListener(buttonControl);
 
-		testAlert = (Button)findViewById(R.id.test_alert);
+		testAlert = (Button) findViewById(R.id.test_alert);
 		testAlert.setOnClickListener(buttonControl);
 		 /*((CheckBox)findViewById(R.id.notifications)).setOnClickListener(buttonControl);
 		 ((CheckBox)findViewById(R.id.screen_flash)).setOnClickListener(buttonControl);
@@ -89,8 +92,9 @@ public class MainActivity extends Activity
 		//phoneNumbers.add("(213) 537 - 9961");
 		text = new SMSNotification(this, phoneNumbers, "message goes here");
 
+		gpsAlert = new GPSAlert(this);
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
@@ -98,15 +102,15 @@ public class MainActivity extends Activity
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
-	
+
 	private Handler handler = new Handler()
 	{
 
 		@Override
-		public void handleMessage(Message msg) 
+		public void handleMessage(Message msg)
 		{
-			
-			if(msg.arg1 == 1 && !alarmActivated) // Turn On
+
+			if (msg.arg1 == 1 && !alarmActivated) // Turn On
 			{
 				if (((CheckBox)findViewById(R.id.notifications)).isChecked()) bar.startNotify();
 				if (((CheckBox)findViewById(R.id.screen_flash)).isChecked()) flash.startNotify();
@@ -115,9 +119,9 @@ public class MainActivity extends Activity
 				if (((CheckBox)findViewById(R.id.txt_message)).isChecked()) text.startNotify();
 
 				alarmActivated = true;
-				Notification("SS12 Audio Alert","FIRE ALARM DETECTED");
+				Notification("SS12 Audio Alert", "FIRE ALARM DETECTED");
 			}
-			else if(msg.arg1 == 0 && alarmActivated)
+			else if (msg.arg1 == 0 && alarmActivated)
 			{
 				if (((CheckBox)findViewById(R.id.notifications)).isChecked()) bar.stopNotify();
 				if (((CheckBox)findViewById(R.id.screen_flash)).isChecked()) flash.stopNotify();
@@ -126,63 +130,68 @@ public class MainActivity extends Activity
 				if (((CheckBox)findViewById(R.id.txt_message)).isChecked()) text.stopNotify();
 				alarmActivated = false;
 			}
-			Log.d(TAG, "FIRE ALARM DETECTED");	
+			Log.d(TAG, "FIRE ALARM DETECTED");
 		}
-		
+
 	};
 
-	public Handler getHandler() 
+	public Handler getHandler()
 	{
 		return handler;
 	}
-	
-	public void setHandler(Handler handler) 
+
+	public void setHandler(Handler handler)
 	{
 		this.handler = handler;
 	}
-	
-	
+
 	/**
 	 * Notification Bar messaging.
+	 * 
 	 * @param notificationTitle
 	 * @param notificationMessage
 	 */
-    private void Notification(String notificationTitle, String notificationMessage)
-    {
-        NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-        Notification notification = new Notification(R.drawable.ic_launcher, "ALERT!!!", System.currentTimeMillis());
-        notification.flags = Notification.FLAG_AUTO_CANCEL;
-        
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
- 
-        notification.setLatestEventInfo(MainActivity.this, notificationTitle, notificationMessage, pendingIntent);
-        notificationManager.notify(10001, notification);
-    }
+	private void Notification(String notificationTitle,
+			String notificationMessage)
+	{
+		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+		Notification notification = new Notification(R.drawable.ic_launcher,
+				"ALERT!!!", System.currentTimeMillis());
+		notification.flags = Notification.FLAG_AUTO_CANCEL;
 
-	public boolean isAlarmActivated() 
+		Intent notificationIntent = new Intent(this, MainActivity.class);
+		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+				| Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+				notificationIntent, 0);
+
+		notification.setLatestEventInfo(MainActivity.this, notificationTitle,
+				notificationMessage, pendingIntent);
+		notificationManager.notify(10001, notification);
+	}
+
+	public boolean isAlarmActivated()
 	{
 		return alarmActivated;
 	}
 
-	public void setAlarmActivated(boolean alarmActivated) 
+	public void setAlarmActivated(boolean alarmActivated)
 	{
 		this.alarmActivated = alarmActivated;
 	}
 
-	
-
 	@Override
-	public void onBackPressed() 
+	public void onBackPressed()
 	{
 		/*AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Exit");
 		builder.setMessage("Exit application and disable service monitor? (You can press home to move to background)");
-		builder.setPositiveButton("Exit", new DialogInterface.OnClickListener() {
-			
+		builder.setPositiveButton("Exit", new DialogInterface.OnClickListener()
+		{
+
 			@Override
-			public void onClick(DialogInterface dialog, int which) {
+			public void onClick(DialogInterface dialog, int which)
+			{
 				finish();
 			}
 		});
@@ -193,11 +202,10 @@ public class MainActivity extends Activity
 			
 	}
 
-
-
 	@Override
-	protected void onDestroy() 
+	protected void onDestroy()
 	{
+		gpsAlert.stopGps();
 		stopService(intent);
 		super.onDestroy();
 	}
@@ -208,5 +216,4 @@ public class MainActivity extends Activity
 		return false;
 	}
 
-    
 }
