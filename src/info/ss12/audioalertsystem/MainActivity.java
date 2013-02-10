@@ -57,8 +57,6 @@ public class MainActivity extends Activity
 		bar = new NotificationBarNotification();
 		cameraLight = new CameraLightNotification();
 	}
-
-	
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
@@ -116,7 +114,7 @@ public class MainActivity extends Activity
     private void Notification(String notificationTitle, String notificationMessage)
     {
         NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-        Notification notification = new Notification(R.drawable.audioalert_icon, "ALERT!!!", System.currentTimeMillis());
+        Notification notification = new Notification(R.drawable.ic_launcher, "ALERT!!!", System.currentTimeMillis());
         notification.flags = Notification.FLAG_AUTO_CANCEL;
         
         Intent notificationIntent = new Intent(this, MainActivity.class);
