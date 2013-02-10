@@ -16,7 +16,8 @@ public class CameraLightNotification extends AbstractNotification {
 	
 	public CameraLightNotification() {
 		camera = Camera.open();
-		light_ON = light_OFF = camera.getParameters();
+		light_ON = camera.getParameters();
+		light_OFF = camera.getParameters();
 		light_ON.setFlashMode(Parameters.FLASH_MODE_TORCH);
 		light_OFF.setFlashMode(Parameters.FLASH_MODE_OFF);
 		timer = new Timer();
@@ -25,7 +26,7 @@ public class CameraLightNotification extends AbstractNotification {
 	
 	@Override
 	public void startNotify() {
-		camera = Camera.open();
+		
 		camera.startPreview();
 		timer.schedule(new TimerTask() {
 			@Override
