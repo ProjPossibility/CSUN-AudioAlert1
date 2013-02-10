@@ -3,7 +3,9 @@ package info.ss12.audioalertsystem;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.os.Message;
 import android.os.Messenger;
+import android.os.RemoteException;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,12 +20,14 @@ public class ButtonController implements OnClickListener, OnTouchListener
 	private MainActivity mainActivity;
 	private LocalService localService;
 	private Intent intent;
+	private Messenger messenger;
 	
 	public ButtonController(MainActivity mainActivity)
 	{
 		this.mainActivity = mainActivity;
 		localService = new LocalService();
 		intent = new Intent(mainActivity, LocalService.class);
+		messenger = new Messenger(mainActivity.getHandler());
 	}
 	
 	@Override
@@ -71,7 +75,7 @@ public class ButtonController implements OnClickListener, OnTouchListener
 				Log.d(TAG, "switch on");
 				micImage.setImageBitmap(BitmapFactory.decodeResource(mainActivity.getResources(), R.drawable.mic_icon_on));
 				
-				Messenger messenger = new Messenger(mainActivity.getHandler());
+				
 				intent.putExtra("HANDLER", messenger);
 				mainActivity.startService(intent);
 			}
@@ -83,6 +87,19 @@ public class ButtonController implements OnClickListener, OnTouchListener
 			}
 			
 		} 
+		else if(id == R.id.test_alert)
+		{
+			Message msg = Message.obtain();
+			msg.obj = "TEST ALARM";
+			try 
+			{
+				messenger.send(msg);
+			} 
+			catch (RemoteException e) 
+			{
+				e.printStackTrace();
+			}
+		}
 		else 
 		{
 			Log.d("swtich button test", "default");
