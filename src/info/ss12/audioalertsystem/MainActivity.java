@@ -49,7 +49,6 @@ public class MainActivity extends Activity
 	public static final String TEXT = "TXT";
 	private final String TAG = "Main Activity";
 	private boolean alarmActivated = false;
-	private boolean onSettingScreen;
 	private boolean screenFlashAlert;
 	private boolean vibrateAlert;
 	private boolean cameraFlashAlert;
@@ -57,7 +56,6 @@ public class MainActivity extends Activity
 	private boolean txtMessageAlert;
 	private Switch micSwitch;
 	private Button testAlert;
-	private MenuItem settings;
 
 	private ListView listView;
 	private ArrayAdapter<String> adapter;
@@ -76,6 +74,7 @@ public class MainActivity extends Activity
 	
 	private View mainView = null;
 	private View settingsView = null;
+	private View helpView = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -274,10 +273,16 @@ public class MainActivity extends Activity
 	@Override
 	public void onBackPressed()
 	{
-		if (onSettingScreen)
+		if (settingsView != null && settingsView.isShown())
 		{
 			this.setContentView(mainView);
-			onSettingScreen = false;
+//			onSettingScreen = false;
+			return;
+		}
+		
+		if(helpView != null && helpView.isShown())
+		{
+			setContentView(mainView);
 			return;
 		}
 		
@@ -333,23 +338,43 @@ public class MainActivity extends Activity
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
-		if(settingsView == null)
+		if (item.getItemId() == R.id.menu_settings)
 		{
-			settingsView = getLayoutInflater().inflate(R.layout.settings, null);
-			SettingClickListener settingClickListener = new SettingClickListener();
-			((CheckBox)settingsView.findViewById(R.id.notifications)).setOnClickListener(settingClickListener);
-			((CheckBox)settingsView.findViewById(R.id.screen_flash)).setOnClickListener(settingClickListener);
-			((CheckBox)settingsView.findViewById(R.id.vibrate)).setOnClickListener(settingClickListener);
-			((CheckBox)settingsView.findViewById(R.id.camera_flash)).setOnClickListener(settingClickListener);
-			((CheckBox)settingsView.findViewById(R.id.txt_message)).setOnClickListener(settingClickListener) ;
+			if (settingsView == null)
+			{
+				settingsView = getLayoutInflater().inflate(R.layout.settings,
+						null);
+				SettingClickListener settingClickListener = new SettingClickListener();
+				((CheckBox) settingsView.findViewById(R.id.notifications))
+						.setOnClickListener(settingClickListener);
+				((CheckBox) settingsView.findViewById(R.id.screen_flash))
+						.setOnClickListener(settingClickListener);
+				((CheckBox) settingsView.findViewById(R.id.vibrate))
+						.setOnClickListener(settingClickListener);
+				((CheckBox) settingsView.findViewById(R.id.camera_flash))
+						.setOnClickListener(settingClickListener);
+				((CheckBox) settingsView.findViewById(R.id.txt_message))
+						.setOnClickListener(settingClickListener);
+			}
+			setContentView(settingsView);
+			((CheckBox) findViewById(R.id.notifications))
+					.setChecked(notificationsAlert);
+			((CheckBox) findViewById(R.id.screen_flash))
+					.setChecked(screenFlashAlert);
+			((CheckBox) findViewById(R.id.vibrate)).setChecked(vibrateAlert);
+			((CheckBox) findViewById(R.id.camera_flash))
+					.setChecked(cameraFlashAlert);
+			((CheckBox) findViewById(R.id.txt_message))
+					.setChecked(txtMessageAlert);
 		}
-		setContentView(settingsView);
-		 ((CheckBox)findViewById(R.id.notifications)).setChecked(notificationsAlert);
-		 ((CheckBox)findViewById(R.id.screen_flash)).setChecked(screenFlashAlert);
-		 ((CheckBox)findViewById(R.id.vibrate)).setChecked(vibrateAlert);
-		 ((CheckBox)findViewById(R.id.camera_flash)).setChecked(cameraFlashAlert);
-		 ((CheckBox)findViewById(R.id.txt_message)).setChecked(txtMessageAlert);
-		onSettingScreen = true;
+		if (item.getItemId() == R.id.help)
+		{
+			if(helpView == null)
+			{
+				helpView = getLayoutInflater().inflate(R.layout.help, null);
+			}
+			setContentView(helpView);
+		}
 		return false;
 	}
 	
