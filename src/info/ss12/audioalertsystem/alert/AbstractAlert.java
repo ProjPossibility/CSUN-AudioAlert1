@@ -23,4 +23,10 @@ public class AbstractAlert {
 			alertListener.onAlert();
 		}
 	}
+	
+	public void dismissAlert() {
+		if (alertListener != null) {
+			alertListener.onDismiss();
+		}
+	}
 }
