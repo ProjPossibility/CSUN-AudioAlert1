@@ -74,13 +74,16 @@ public class MainActivity extends Activity
 	private GPSAlert gpsAlert;
 	private Intent intent; // Used for Service
 	
+	private View mainView = null;
 	private View settingsView = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		if(mainView == null)
+			mainView = getLayoutInflater().inflate(R.layout.activity_main, null);
+		setContentView(mainView);
 		// Restore preferences
 		SharedPreferences settings = getSharedPreferences(AUDIO_PREF, 0);
 		screenFlashAlert = settings.getBoolean(SCREEN_FLASH, true);
@@ -88,7 +91,7 @@ public class MainActivity extends Activity
 		cameraFlashAlert = settings.getBoolean(CAMERA, true);
 		notificationsAlert = settings.getBoolean(NOTIFICATION, true);
 		txtMessageAlert = settings.getBoolean(TEXT, true);
-		Set<String> phoneList = settings.getStringSet(PHONE_LIST, null);
+		Set<String> phoneList = settings.getStringSet(PHONE_LIST, new TreeSet<String>());
 		List<String> phones = new ArrayList<String>(phoneList);
 		listView = (ListView) findViewById(R.id.phone_list);
 		adapter = new ArrayAdapter<String>(this, R.layout.cell_layout,
@@ -273,7 +276,7 @@ public class MainActivity extends Activity
 	{
 		if (onSettingScreen)
 		{
-			this.setContentView(R.layout.activity_main);
+			this.setContentView(mainView);
 			onSettingScreen = false;
 			return;
 		}
