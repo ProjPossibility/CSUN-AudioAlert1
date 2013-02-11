@@ -4,7 +4,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="15dp"
+    android:padding="15sp"
     tools:context=".MainActivity" >
 
     <Button
@@ -36,6 +36,8 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:background="#D3D3D3"
+        android:padding="15sp"
         android:orientation="vertical" >
 
         <LinearLayout
@@ -45,10 +47,10 @@
 
             <TextView
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="@string/emergency_contact"
-                android:textSize="16dp" />
+                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/add_phone_button"
