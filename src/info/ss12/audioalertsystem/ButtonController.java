@@ -21,12 +21,11 @@ public class ButtonController implements OnClickListener, OnTouchListener,
 
 	private final String TAG = "Button Controller";
 	private MainActivity mainActivity;
-	private Intent intent;
+	private Intent intent = null;
 	private Messenger messenger;
 
-	public ButtonController(MainActivity mainActivity, Intent intent)
+	public ButtonController(MainActivity mainActivity)
 	{
-		this.intent = intent;
 		this.mainActivity = mainActivity;
 		messenger = new Messenger(mainActivity.getHandler());
 	}
@@ -80,6 +79,7 @@ public class ButtonController implements OnClickListener, OnTouchListener,
 				Log.d(TAG, "switch on");
 				micImage.setImageBitmap(BitmapFactory.decodeResource(
 						mainActivity.getResources(), R.drawable.mic_icon_on));
+				intent = new Intent(mainActivity, LocalService.class);
 				intent.putExtra("HANDLER", messenger);
 				mainActivity.startService(intent);
 			}
@@ -89,7 +89,7 @@ public class ButtonController implements OnClickListener, OnTouchListener,
 				micImage.setImageBitmap(BitmapFactory.decodeResource(
 						mainActivity.getResources(), R.drawable.mic_icon_off));
 				mainActivity.stopService(intent);
-				// turnOffAllNoti(); this function call might be breaking the on/off switch
+				 turnOffAllNoti(); //this function call might be breaking the on/off switch
 			}
 
 		}
@@ -120,6 +120,11 @@ public class ButtonController implements OnClickListener, OnTouchListener,
 		// open new page
 		mainActivity.setContentView(R.layout.settings);
 		return false;
+	}
+
+	public Intent getIntent()
+	{
+		return intent;
 	}
 
 }

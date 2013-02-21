@@ -81,7 +81,7 @@ public class MainActivity extends Activity
 	private SMSNotification text;
 
 	private GPSAlert gpsAlert;
-	private Intent intent; // Used for Service
+	
 
 	private View mainView = null;
 	private View settingsView = null;
@@ -160,8 +160,7 @@ public class MainActivity extends Activity
 			}
 		});
 
-		intent = new Intent(this, LocalService.class);
-		buttonControl = new ButtonController(this, intent);
+		buttonControl = new ButtonController(this);
 		micSwitch = (Switch) findViewById(R.id.mic_switch);
 		micSwitch.setOnClickListener(buttonControl);
 		micSwitch.setOnTouchListener(buttonControl);
@@ -402,7 +401,10 @@ public class MainActivity extends Activity
 	protected void onDestroy()
 	{
 		gpsAlert.stopGps();
-		stopService(intent);
+		if (buttonControl != null && buttonControl.getIntent() != null)
+		{
+			stopService(buttonControl.getIntent());
+		}
 		super.onDestroy();
 	}
 

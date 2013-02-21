@@ -10,8 +10,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
-
-// import android.widget.Toast;
+import android.widget.Toast;
 
 /**
  * The LocalService class. Used to manage notifications, alerts and background
@@ -93,7 +92,7 @@ public class LocalService extends Service implements AlertListener,
 	public void onCreate()
 	{
 		super.onCreate();
-		// Toast.makeText(this, "Service Created", 300).show();
+		//Toast.makeText(this, "Service Created", 300).show();
 	}
 
 	/**
@@ -107,7 +106,7 @@ public class LocalService extends Service implements AlertListener,
 	public void onDestroy()
 	{
 		super.onDestroy();
-		// // Toast.makeText(this, "Service Destroy", 300).show();
+		Toast.makeText(this, "Service Destroy", 300).show();
 		recorder.stopRecording();
 		detector.stopDetection();
 	}
@@ -139,7 +138,7 @@ public class LocalService extends Service implements AlertListener,
 	public void onStart(Intent intent, int startId)
 	{
 		super.onStart(intent, startId);
-		// Toast.makeText(this, "Service start", 300).show();
+		 Toast.makeText(this, "Service start", 300).show();
 	}
 
 	/**
