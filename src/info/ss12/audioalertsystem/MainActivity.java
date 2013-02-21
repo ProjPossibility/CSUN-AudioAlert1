@@ -40,55 +40,93 @@ import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+/**
+ * The MainActivity class. Handles lifecycle of the GUI
+ */
 public class MainActivity extends Activity
 {
+	/** Shared settings for AUDIO_PREF */
 	public static final String AUDIO_PREF = "AUDIO_PREF";
+	/** Shared settings for Phone List */
 	public static final String PHONE_LIST = "PHONE_LIST";
+	/** Shared settings for Notification */
 	public static final String NOTIFICATION = "NOT";
+	/** Shared settings for Screen Flash */
 	public static final String SCREEN_FLASH = "SCR";
+	/** Shared settings for Vibrate */
 	public static final String VIBRATE = "VBR";
+	/** Shared settings for Camera */
 	public static final String CAMERA = "CAM";
+	/** Shared settings for Text */
 	public static final String TEXT = "TXT";
+	/** Shared settings for Text-to-speech */
 	public static final String TEXT_TO_SPEECH = "TTS";
+	/** TAG for debugging */
 	private final String TAG = "Main Activity";
+	/** Toggle for activated alarm */
 	private boolean alarmActivated = false;
+	/** Toggle for screen flash */
 	private boolean screenFlashAlert;
+	/** Toggle for vibrate alert */
 	private boolean vibrateAlert;
+	/** Toggle for camera flash alert */
 	private boolean cameraFlashAlert;
+	/** Toggle for notification alert */
 	private boolean notificationsAlert;
+	/** Toggle for text message alert */
 	private boolean txtMessageAlert;
+	/** Toggle for text-to-speech */
 	private boolean textToSpeech;
-
+	/** Toggle for first alarm */
 	private boolean firstAlarm = true;
+	/** Toggle for past allotted time */
 	private boolean pastAllotted = false;
+	/** The count down timer */
 	private CountDownTimer countDownTimer;
+	/** The silence timer */
 	private CountDownTimer silenceTimer;
+	/** The amount of time for count down */
 	private long countDownTime = 10000;
+	/** Text view for Timer */
 	private TextView timerView;
-
+	/** The mic switch */
 	private Switch micSwitch;
+	/** The button for test alert */
 	private Button testAlert;
-
+	/** The list view */
 	private ListView listView;
+	/** The adapter */
 	private ArrayAdapter<String> adapter;
-
+	/** Button controller */
 	private ButtonController buttonControl;
-
+	/** The vibrate notification */
 	private VibrateNotification vibrate;
+	/** The flash notification */
 	private FlashNotification flash;
+	/** The notification bar notification */
 	private NotificationBarNotification bar;
-
+	/** The camera light notification */
 	private CameraLightNotification cameraLight;
+	/** The SMS Notification */
 	private SMSNotification text;
+	/** The Text to speech notification */
 	private TextToSpeechNotification TTS;
-
+	/** The GPS alert */
 	private GPSAlert gpsAlert;
-	
-
+	/** The main view */
 	private View mainView = null;
+	/** The settings view */
 	private View settingsView = null;
+	/** The help view */
 	private View helpView = null;
 
+	/**
+	 * Called when the activity is starting. This is where most initialization
+	 * should go: calling setContentView(int) to inflate the activity's UI,
+	 * using findViewById(int) to programmatically interact with widgets in the
+	 * UI, calling managedQuery(android.net.Uri, String[], String, String[],
+	 * String) to retrieve cursors for data being displayed, etc.
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -126,7 +164,7 @@ public class MainActivity extends Activity
 		listView.setAdapter(adapter);
 
 		timerView = (TextView) findViewById(R.id.timer_view);
-		
+
 		Button add = (Button) findViewById(R.id.add_phone_button);
 		add.setOnClickListener(new View.OnClickListener()
 		{
@@ -181,10 +219,18 @@ public class MainActivity extends Activity
 		text = new SMSNotification(this);
 
 		gpsAlert = new GPSAlert(this);
-		
+
 		TTS = new TextToSpeechNotification(this);
 	}
 
+	/**
+	 * Initialize the contents of the Activity's standard options menu. You
+	 * should place your menu items in to menu.
+	 * 
+	 * This is only called once, the first time the options menu is displayed.
+	 * To update the menu every time it is displayed, see
+	 * onPrepareOptionsMenu(Menu).
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
@@ -193,6 +239,10 @@ public class MainActivity extends Activity
 		return true;
 	}
 
+	/**
+	 * To schedule messages and runnables to be executed as some point in the
+	 * future
+	 */
 	private Handler handler = new Handler()
 	{
 
@@ -207,7 +257,8 @@ public class MainActivity extends Activity
 					@Override
 					public void onTick(long millisUntilFinished)
 					{
-						timerView.setText("seconds remaining: " + millisUntilFinished / 1000);
+						timerView.setText("seconds remaining: "
+								+ millisUntilFinished / 1000);
 					}
 
 					@Override
@@ -221,7 +272,7 @@ public class MainActivity extends Activity
 							@Override
 							public void onTick(long millisUntilFinished)
 							{
-								
+
 							}
 
 							@Override
@@ -239,7 +290,7 @@ public class MainActivity extends Activity
 
 			if (pastAllotted)
 			{
-				
+
 				if (msg.arg1 == 1 && !alarmActivated) // Turn On
 				{
 					if (mainView != null && !mainView.isShown())
@@ -252,7 +303,7 @@ public class MainActivity extends Activity
 						vibrate.startNotify();
 					if (cameraFlashAlert)
 						cameraLight.startNotify();
-					if(textToSpeech)
+					if (textToSpeech)
 						TTS.startNotify();
 					List<String> phoneNumbers = new ArrayList<String>();
 					for (int i = 0; i < adapter.getCount(); i++)
@@ -267,21 +318,21 @@ public class MainActivity extends Activity
 					alarmActivated = true;
 					Notification("SS12 Audio Alert", "FIRE ALARM DETECTED");
 				}
-				
+
 			}
-			
+
 			if (msg.arg1 == 0 && alarmActivated)
 			{
-				if(countDownTimer != null)
+				if (countDownTimer != null)
 				{
 					countDownTimer.cancel();
 				}
-				
-				if(silenceTimer!= null)
+
+				if (silenceTimer != null)
 				{
 					silenceTimer.cancel();
 				}
-				
+
 				if (notificationsAlert)
 					bar.stopNotify();
 				if (screenFlashAlert)
@@ -292,10 +343,10 @@ public class MainActivity extends Activity
 					cameraLight.stopNotify();
 				if (txtMessageAlert)
 					text.stopNotify();
-				if(textToSpeech)
+				if (textToSpeech)
 					TTS.stopNotify();
 				firstAlarm = true;
-				pastAllotted = false;	
+				pastAllotted = false;
 				alarmActivated = false;
 			}
 
@@ -303,11 +354,22 @@ public class MainActivity extends Activity
 
 	};
 
+	/**
+	 * Return the handler
+	 * 
+	 * @return the handler
+	 */
 	public Handler getHandler()
 	{
 		return handler;
 	}
 
+	/**
+	 * Set the handler
+	 * 
+	 * @param handler
+	 *            the handler
+	 */
 	public void setHandler(Handler handler)
 	{
 		this.handler = handler;
@@ -338,16 +400,30 @@ public class MainActivity extends Activity
 		notificationManager.notify(10001, notification);
 	}
 
+	/**
+	 * Return state of alarm
+	 * 
+	 * @return the alarm state
+	 */
 	public boolean isAlarmActivated()
 	{
 		return alarmActivated;
 	}
 
+	/**
+	 * Set the alarm state
+	 * 
+	 * @param alarmActivated
+	 *            the alarm state
+	 */
 	public void setAlarmActivated(boolean alarmActivated)
 	{
 		this.alarmActivated = alarmActivated;
 	}
 
+	/**
+	 * Called when the activity has detected the user's press of the back key.
+	 */
 	@Override
 	public void onBackPressed()
 	{
@@ -380,6 +456,9 @@ public class MainActivity extends Activity
 		builder.show();
 	}
 
+	/**
+	 * Called when you are no longer visible to the user.
+	 */
 	@Override
 	protected void onStop()
 	{
@@ -396,6 +475,11 @@ public class MainActivity extends Activity
 		super.onStop();
 	}
 
+	/**
+	 * Get the phone number list
+	 * 
+	 * @return the phone number list
+	 */
 	public Set<String> getPhoneNumberList()
 	{
 		Set<String> phones = new TreeSet<String>();
@@ -406,6 +490,9 @@ public class MainActivity extends Activity
 		return phones;
 	}
 
+	/**
+	 * Perform any final cleanup before an activity is destroyed.
+	 */
 	@Override
 	protected void onDestroy()
 	{
@@ -417,6 +504,9 @@ public class MainActivity extends Activity
 		super.onDestroy();
 	}
 
+	/**
+	 * This hook is called whenever an item in your options menu is selected.
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
@@ -450,8 +540,7 @@ public class MainActivity extends Activity
 					.setChecked(cameraFlashAlert);
 			((CheckBox) findViewById(R.id.txt_message))
 					.setChecked(txtMessageAlert);
-			((CheckBox) findViewById(R.id.tts_switch))
-			.setChecked(textToSpeech);
+			((CheckBox) findViewById(R.id.tts_switch)).setChecked(textToSpeech);
 		}
 		if (item.getItemId() == R.id.help)
 		{
@@ -464,9 +553,15 @@ public class MainActivity extends Activity
 		return false;
 	}
 
+	/**
+	 * Listener class for settings
+	 */
 	public class SettingClickListener implements OnClickListener
 	{
 
+		/**
+		 * Called when a view has been clicked for settings.
+		 */
 		@Override
 		public void onClick(View v)
 		{
@@ -491,11 +586,11 @@ public class MainActivity extends Activity
 			{
 				txtMessageAlert = ((CheckBox) v).isChecked();
 			}
-			if(id == R.id.tts_switch)
+			if (id == R.id.tts_switch)
 			{
 				textToSpeech = ((CheckBox) v).isChecked();
 			}
-			
+
 		}
 
 	}

@@ -15,6 +15,9 @@ import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.Switch;
 
+/**
+ * ButtonController used to handle the button clicks
+ */
 public class ButtonController implements OnClickListener, OnTouchListener,
 		OnMenuItemClickListener
 {
@@ -24,12 +27,19 @@ public class ButtonController implements OnClickListener, OnTouchListener,
 	private Intent intent = null;
 	private Messenger messenger;
 
+	/**
+	 * ButtonController constructor
+	 * @param mainActivity the MainActivity
+	 */
 	public ButtonController(MainActivity mainActivity)
 	{
 		this.mainActivity = mainActivity;
 		messenger = new Messenger(mainActivity.getHandler());
 	}
 
+	/**
+	 * Called when a view has been clicked.
+	 */
 	@Override
 	public void onClick(View v)
 	{
@@ -37,6 +47,10 @@ public class ButtonController implements OnClickListener, OnTouchListener,
 		handleButtonToggle(v);
 	}
 
+	/**
+	 * Called when a touch event is dispatched to a view. This allows listeners
+	 * to get a chance to respond before the target view.
+	 */
 	@Override
 	public boolean onTouch(View v, MotionEvent event)
 	{
@@ -60,6 +74,10 @@ public class ButtonController implements OnClickListener, OnTouchListener,
 		return false;
 	}
 
+	/**
+	 * Toggle the notification button ON/OFF
+	 * @param v the view
+	 */
 	public void handleButtonToggle(View v)
 	{
 		int id = v.getId();
@@ -89,7 +107,8 @@ public class ButtonController implements OnClickListener, OnTouchListener,
 				micImage.setImageBitmap(BitmapFactory.decodeResource(
 						mainActivity.getResources(), R.drawable.mic_icon_off));
 				mainActivity.stopService(intent);
-				 turnOffAllNoti(); //this function call might be breaking the on/off switch
+				turnOffAllNoti(); // this function call might be breaking the
+									// on/off switch
 			}
 
 		}
@@ -100,6 +119,9 @@ public class ButtonController implements OnClickListener, OnTouchListener,
 
 	}
 
+	/**
+	 * Turns off all notifications
+	 */
 	public void turnOffAllNoti()
 	{
 		Message msg = Message.obtain();
@@ -114,6 +136,10 @@ public class ButtonController implements OnClickListener, OnTouchListener,
 		}
 	}
 
+	/**
+	 * Called when a menu item has been invoked. This is the first code that is
+	 * executed; if it returns true, no other callbacks will be executed.
+	 */
 	@Override
 	public boolean onMenuItemClick(MenuItem arg0)
 	{
@@ -122,6 +148,10 @@ public class ButtonController implements OnClickListener, OnTouchListener,
 		return false;
 	}
 
+	/**
+	 * Return the intent
+	 * @return the intent
+	 */
 	public Intent getIntent()
 	{
 		return intent;
