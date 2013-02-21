@@ -145,7 +145,6 @@ public class MainActivity extends Activity
 		txtMessageAlert = settings.getBoolean(TEXT, true);
 		textToSpeech = settings.getBoolean(TEXT_TO_SPEECH, true);
 		countDownTime = settings.getLong(COUNT_DOWN, 10000);
-		countDownTime /= 1000;
 		Set<String> phoneList = settings.getStringSet(PHONE_LIST,
 				new TreeSet<String>());
 		List<String> phones = new ArrayList<String>(phoneList);
@@ -550,7 +549,7 @@ public class MainActivity extends Activity
 			((CheckBox) findViewById(R.id.tts_switch))
 					.setChecked(textToSpeech);
 			((EditText) findViewById(R.id.time_out))
-					.setText(String.valueOf(countDownTime));
+					.setText(String.valueOf(countDownTime / 1000));
 		}
 		if (item.getItemId() == R.id.help)
 		{
