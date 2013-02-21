@@ -89,7 +89,7 @@ public class ButtonController implements OnClickListener, OnTouchListener,
 				micImage.setImageBitmap(BitmapFactory.decodeResource(
 						mainActivity.getResources(), R.drawable.mic_icon_off));
 				mainActivity.stopService(intent);
-				turnOffAllNoti();
+				// turnOffAllNoti(); this function call might be breaking the on/off switch
 			}
 
 		}
