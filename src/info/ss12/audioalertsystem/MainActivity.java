@@ -51,6 +51,7 @@ public class MainActivity extends Activity
 	public static final String VIBRATE = "VBR";
 	public static final String CAMERA = "CAM";
 	public static final String TEXT = "TXT";
+	public static final String TEXT_TO_SPEECH = "TTS";
 	private final String TAG = "Main Activity";
 	private boolean alarmActivated = false;
 	private boolean screenFlashAlert;
@@ -58,6 +59,7 @@ public class MainActivity extends Activity
 	private boolean cameraFlashAlert;
 	private boolean notificationsAlert;
 	private boolean txtMessageAlert;
+	private boolean textToSpeech;
 
 	private boolean firstAlarm = true;
 	private boolean pastAllotted = false;
@@ -105,6 +107,7 @@ public class MainActivity extends Activity
 		cameraFlashAlert = settings.getBoolean(CAMERA, true);
 		notificationsAlert = settings.getBoolean(NOTIFICATION, true);
 		txtMessageAlert = settings.getBoolean(TEXT, true);
+		textToSpeech = settings.getBoolean(TEXT_TO_SPEECH, true);
 		Set<String> phoneList = settings.getStringSet(PHONE_LIST,
 				new TreeSet<String>());
 		List<String> phones = new ArrayList<String>(phoneList);
@@ -253,8 +256,8 @@ public class MainActivity extends Activity
 						vibrate.startNotify();
 					if (cameraFlashAlert)
 						cameraLight.startNotify();
-					
-					TTS.startNotify();
+					if(textToSpeech)
+						TTS.startNotify();
 					List<String> phoneNumbers = new ArrayList<String>();
 					for (int i = 0; i < adapter.getCount(); i++)
 					{
@@ -293,7 +296,8 @@ public class MainActivity extends Activity
 					cameraLight.stopNotify();
 				if (txtMessageAlert)
 					text.stopNotify();
-				TTS.stopNotify();
+				if(textToSpeech)
+					TTS.stopNotify();
 				firstAlarm = true;
 				pastAllotted = false;	
 				alarmActivated = false;
@@ -391,6 +395,7 @@ public class MainActivity extends Activity
 		editor.putBoolean(VIBRATE, vibrateAlert);
 		editor.putBoolean(CAMERA, cameraFlashAlert);
 		editor.putBoolean(TEXT, txtMessageAlert);
+		editor.putBoolean(TEXT_TO_SPEECH, textToSpeech);
 		editor.commit();
 		super.onStop();
 	}
@@ -436,6 +441,8 @@ public class MainActivity extends Activity
 						.setOnClickListener(settingClickListener);
 				((CheckBox) settingsView.findViewById(R.id.txt_message))
 						.setOnClickListener(settingClickListener);
+				((CheckBox) settingsView.findViewById(R.id.tts_switch))
+						.setOnClickListener(settingClickListener);
 			}
 			setContentView(settingsView);
 			((CheckBox) findViewById(R.id.notifications))
@@ -447,6 +454,8 @@ public class MainActivity extends Activity
 					.setChecked(cameraFlashAlert);
 			((CheckBox) findViewById(R.id.txt_message))
 					.setChecked(txtMessageAlert);
+			((CheckBox) findViewById(R.id.tts_switch))
+			.setChecked(textToSpeech);
 		}
 		if (item.getItemId() == R.id.help)
 		{
@@ -486,6 +495,11 @@ public class MainActivity extends Activity
 			{
 				txtMessageAlert = ((CheckBox) v).isChecked();
 			}
+			if(id == R.id.tts_switch)
+			{
+				textToSpeech = ((CheckBox) v).isChecked();
+			}
+			
 		}
 
 	}
