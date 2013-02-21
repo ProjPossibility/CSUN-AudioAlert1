@@ -5,6 +5,7 @@ import info.ss12.audioalertsystem.notification.CameraLightNotification;
 import info.ss12.audioalertsystem.notification.FlashNotification;
 import info.ss12.audioalertsystem.notification.NotificationBarNotification;
 import info.ss12.audioalertsystem.notification.SMSNotification;
+import info.ss12.audioalertsystem.notification.TextToSpeechNotification;
 import info.ss12.audioalertsystem.notification.VibrateNotification;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -79,6 +81,7 @@ public class MainActivity extends Activity
 
 	private CameraLightNotification cameraLight;
 	private SMSNotification text;
+	private TextToSpeechNotification TTS;
 
 	private GPSAlert gpsAlert;
 	
@@ -178,6 +181,8 @@ public class MainActivity extends Activity
 		text = new SMSNotification(this);
 
 		gpsAlert = new GPSAlert(this);
+		
+		TTS = new TextToSpeechNotification(this);
 	}
 
 	@Override
@@ -248,6 +253,8 @@ public class MainActivity extends Activity
 						vibrate.startNotify();
 					if (cameraFlashAlert)
 						cameraLight.startNotify();
+					
+					TTS.startNotify();
 					List<String> phoneNumbers = new ArrayList<String>();
 					for (int i = 0; i < adapter.getCount(); i++)
 					{
@@ -286,7 +293,7 @@ public class MainActivity extends Activity
 					cameraLight.stopNotify();
 				if (txtMessageAlert)
 					text.stopNotify();
-				
+				TTS.stopNotify();
 				firstAlarm = true;
 				pastAllotted = false;	
 				alarmActivated = false;
