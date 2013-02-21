@@ -264,7 +264,7 @@ public class MainActivity extends Activity
 				
 			}
 			
-			if (msg.arg1 == 0)
+			if (msg.arg1 == 0 && alarmActivated)
 			{
 				if(countDownTimer != null)
 				{
@@ -276,18 +276,16 @@ public class MainActivity extends Activity
 					silenceTimer.cancel();
 				}
 				
-				if (alarmActivated) {
-					if (notificationsAlert)
-						bar.stopNotify();
-					if (screenFlashAlert)
-						flash.stopNotify();
-					if (vibrateAlert)
-						vibrate.stopNotify();
-					if (cameraFlashAlert)
-						cameraLight.stopNotify();
-					if (txtMessageAlert)
-						text.stopNotify();
-				}
+				if (notificationsAlert)
+					bar.stopNotify();
+				if (screenFlashAlert)
+					flash.stopNotify();
+				if (vibrateAlert)
+					vibrate.stopNotify();
+				if (cameraFlashAlert)
+					cameraLight.stopNotify();
+				if (txtMessageAlert)
+					text.stopNotify();
 				
 				firstAlarm = true;
 				pastAllotted = false;	
