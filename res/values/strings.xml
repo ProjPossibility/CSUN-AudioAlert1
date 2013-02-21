@@ -22,5 +22,7 @@
     <string name="remove">Remove</string>
     <string name="phone_hint">Phone</string>
     <string name="help_title">Help</string>
+    <string name="save_button">Save</string>
+    <string name="timer">Alarm Delay Timer(Seconds)</string>
     <string name="help_text">-----------\nMain Screen\n-----------\nClick to Activate Alert - Tests the alerts enabled in the settings menu.\nMicrophone Status - Toggles the audio recording on or off.\nEmergency Contacts - A listing of phone numbers to send text messages to, given that "Text Emergency Contacts on Alert" in the Settings menu is enabled. Phone numbers can be added by pressing the "Add Contact" button.\n\n-------------\nSettings Menu\n-------------\nManages the different alerts that are triggered when an audible threat is detected:\n- Camera Flash on Alert: Blinks the camera light.\n- Vibrate on Alert: Operates the phone\'s vibration module.\n- Text Emergency Contacts on Alert: Sends text messages to all emergency contacts.\n- Screen Flash on Alert: Blinks the main screen background color.\n- Notification: Sends a message to the Android status bar.\n</string>
 </resources>

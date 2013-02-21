@@ -1,50 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" 
-    android:padding="15dp">
-  
-    <TextView 
-        android:text="@string/settings_header"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textSize="28sp"/>
-    <CheckBox 
-        android:textSize="20sp"
-        android:text="@string/camera_flash"
-        android:id="@+id/camera_flash"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
-    <CheckBox 
-        android:textSize="20sp"
-        android:text="@string/vibrate"
-        android:id="@+id/vibrate"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
-    <CheckBox 
-        android:textSize="20sp"
-        android:text="@string/txt_message"
-        android:id="@+id/txt_message"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
-    <CheckBox 
-        android:textSize="20sp"
-        android:text="@string/screen_flash"
-        android:id="@+id/screen_flash"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
-    <CheckBox 
-        android:textSize="20sp"
-        android:text="@string/notifications"
-        android:id="@+id/notifications"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
-    <CheckBox 
-        android:textSize="20sp"
-        android:text="@string/tts"
-        android:id="@+id/tts_switch"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" >
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="15dp" >
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_header"
+            android:textSize="28sp" />
+
+        <CheckBox
+            android:id="@+id/camera_flash"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/camera_flash"
+            android:textSize="20sp" />
+
+        <CheckBox
+            android:id="@+id/vibrate"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/vibrate"
+            android:textSize="20sp" />
+
+        <CheckBox
+            android:id="@+id/txt_message"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/txt_message"
+            android:textSize="20sp" />
+
+        <CheckBox
+            android:id="@+id/screen_flash"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/screen_flash"
+            android:textSize="20sp" />
+
+        <CheckBox
+            android:id="@+id/notifications"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/notifications"
+            android:textSize="20sp" />
+
+        <CheckBox
+            android:id="@+id/tts_switch"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/tts"
+            android:textSize="20sp" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/timer" />
+
+            <EditText
+                android:id="@+id/time_out"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:inputType="number" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/save_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/save_button" />
+    </LinearLayout>
+
+</ScrollView>

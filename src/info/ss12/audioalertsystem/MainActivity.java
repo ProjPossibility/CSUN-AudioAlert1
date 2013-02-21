@@ -61,6 +61,7 @@ public class MainActivity extends Activity
 	public static final String TEXT = "TXT";
 	/** Shared settings for Text-to-speech */
 	public static final String TEXT_TO_SPEECH = "TTS";
+	public static final String COUNT_DOWN = "CDT";
 	/** TAG for debugging */
 	private final String TAG = "Main Activity";
 	/** Toggle for activated alarm */
@@ -85,6 +86,7 @@ public class MainActivity extends Activity
 	private CountDownTimer countDownTimer;
 	/** The silence timer */
 	private CountDownTimer silenceTimer;
+	private long countDownTime;
 	/** The amount of time for count down */
 	private long countDownTime = 10000;
 	/** Text view for Timer */
@@ -143,6 +145,8 @@ public class MainActivity extends Activity
 		notificationsAlert = settings.getBoolean(NOTIFICATION, true);
 		txtMessageAlert = settings.getBoolean(TEXT, true);
 		textToSpeech = settings.getBoolean(TEXT_TO_SPEECH, true);
+		countDownTime = settings.getLong(COUNT_DOWN, 10000);
+		countDownTime /= 1000;
 		Set<String> phoneList = settings.getStringSet(PHONE_LIST,
 				new TreeSet<String>());
 		List<String> phones = new ArrayList<String>(phoneList);
@@ -429,8 +433,9 @@ public class MainActivity extends Activity
 	{
 		if (settingsView != null && settingsView.isShown())
 		{
+			countDownTime = Long.parseLong(((EditText)settingsView.findViewById(R.id.time_out)).getText().toString());
+			countDownTime *= 1000;
 			this.setContentView(mainView);
-			// onSettingScreen = false;
 			return;
 		}
 
@@ -471,6 +476,7 @@ public class MainActivity extends Activity
 		editor.putBoolean(CAMERA, cameraFlashAlert);
 		editor.putBoolean(TEXT, txtMessageAlert);
 		editor.putBoolean(TEXT_TO_SPEECH, textToSpeech);
+		editor.putLong(COUNT_DOWN, countDownTime);
 		editor.commit();
 		super.onStop();
 	}
@@ -529,6 +535,8 @@ public class MainActivity extends Activity
 						.setOnClickListener(settingClickListener);
 				((CheckBox) settingsView.findViewById(R.id.tts_switch))
 						.setOnClickListener(settingClickListener);
+				((Button) settingsView.findViewById(R.id.save_button))
+						.setOnClickListener(settingClickListener);
 			}
 			setContentView(settingsView);
 			((CheckBox) findViewById(R.id.notifications))
@@ -540,7 +548,10 @@ public class MainActivity extends Activity
 					.setChecked(cameraFlashAlert);
 			((CheckBox) findViewById(R.id.txt_message))
 					.setChecked(txtMessageAlert);
-			((CheckBox) findViewById(R.id.tts_switch)).setChecked(textToSpeech);
+			((CheckBox) findViewById(R.id.tts_switch))
+					.setChecked(textToSpeech);
+			((EditText) findViewById(R.id.time_out))
+					.setText(String.valueOf(countDownTime));
 		}
 		if (item.getItemId() == R.id.help)
 		{
@@ -591,6 +602,16 @@ public class MainActivity extends Activity
 				textToSpeech = ((CheckBox) v).isChecked();
 			}
 
+			if(id == R.id.save_button)
+			{
+				if (settingsView != null && settingsView.isShown())
+				{
+					countDownTime = Long.parseLong(((EditText)settingsView.findViewById(R.id.time_out)).getText().toString());
+					countDownTime *= 1000;
+					MainActivity.this.setContentView(mainView);
+				}
+			}
+			
 		}
 
 	}
