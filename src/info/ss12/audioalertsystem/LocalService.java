@@ -10,7 +10,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
-import android.widget.Toast;
+// import android.widget.Toast;
 
 public class LocalService extends Service implements AlertListener,
 		NotificationListener
@@ -72,14 +72,14 @@ public class LocalService extends Service implements AlertListener,
 	public void onCreate()
 	{
 		super.onCreate();
-		Toast.makeText(this, "Service Created", 300).show();
+		// Toast.makeText(this, "Service Created", 300).show();
 	}
 
 	@Override
 	public void onDestroy()
 	{
 		super.onDestroy();
-		Toast.makeText(this, "Service Destroy", 300).show();
+		// // Toast.makeText(this, "Service Destroy", 300).show();
 		recorder.stopRecording();
 		detector.stopDetection();
 	}
@@ -88,7 +88,7 @@ public class LocalService extends Service implements AlertListener,
 	public void onLowMemory()
 	{
 		super.onLowMemory();
-		Toast.makeText(this, "Service LowMemory", 300).show();
+		// Toast.makeText(this, "Service LowMemory", 300).show();
 
 	}
 
@@ -96,14 +96,14 @@ public class LocalService extends Service implements AlertListener,
 	public void onStart(Intent intent, int startId)
 	{
 		super.onStart(intent, startId);
-		Toast.makeText(this, "Service start", 300).show();
+		// Toast.makeText(this, "Service start", 300).show();
 	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId)
 	{
 
-		Toast.makeText(this, "task perform in service", 300).show();
+		// Toast.makeText(this, "task perform in service", 300).show();
 		Bundle extra = intent.getExtras();
 		messenger = (Messenger) extra.get("HANDLER");
 		mAudioAlert = new AudioAlert();
