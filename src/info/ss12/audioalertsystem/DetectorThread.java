@@ -30,21 +30,42 @@ import android.media.AudioRecord;
 import com.musicg.api.WhistleApi;
 import com.musicg.wave.WaveHeader;
 
+/**
+ * The DetectorThread class runs the Recorder processes
+ */
 public class DetectorThread extends Thread
 {
 
+	/** The recorder thread */
 	private RecorderThread recorder;
+
+	/** The Wave Header. Used to set wave configurations */
 	private WaveHeader waveHeader;
+	/** The Whistle API. Detect frequency */
 	private WhistleApi whistleApi;
+	/** The thread for detector */
 	private volatile Thread _thread;
 
+	/** The list for whistle results. Used to detect sound level */
 	private LinkedList<Boolean> whistleResultList = new LinkedList<Boolean>();
+	/** The number of whistles */
 	private int numWhistles;
+	/** Total amount of whistles detected */
 	private int totalWhistlesDetected = 0;
+	/** Length check for whistle length */
 	private int whistleCheckLength = 3;
+	/** The pass score for whistle */
 	private int whistlePassScore = 3;
+	/** Listener to send alerts */
 	private AudioAlert listener;
 
+	/**
+	 * The DetectorThread constructor. Used to set recorder and audio alert
+	 * notification
+	 * 
+	 * @param recorder the RecorderThread
+	 * @param listener the AudioAlert
+	 */
 	public DetectorThread(RecorderThread recorder, AudioAlert listener)
 	{
 		this.recorder = recorder;
@@ -75,6 +96,9 @@ public class DetectorThread extends Thread
 		whistleApi = new WhistleApi(waveHeader);
 	}
 
+	/**
+	 * Initialize whistle api
+	 */
 	private void initBuffer()
 	{
 		numWhistles = 0;
@@ -88,17 +112,26 @@ public class DetectorThread extends Thread
 		// end init the first frames
 	}
 
+	/**
+	 * Start the detector thread
+	 */
 	public void start()
 	{
 		_thread = new Thread(this);
 		_thread.start();
 	}
 
+	/**
+	 * Stop the detector thread
+	 */
 	public void stopDetection()
 	{
 		_thread = null;
 	}
 
+	/** 
+	 * The detector thread process
+	 */
 	public void run()
 	{
 		try
@@ -166,6 +199,10 @@ public class DetectorThread extends Thread
 		}
 	}
 
+	/**
+	 * Return the total whistles detected
+	 * @return the number of whistles detected
+	 */
 	public int getTotalWhistlesDetected()
 	{
 		return totalWhistlesDetected;
