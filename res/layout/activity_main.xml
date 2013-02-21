@@ -7,6 +7,11 @@
     android:padding="15sp"
     tools:context=".MainActivity" >
 
+    <TextView 
+        android:id="@+id/timer_view"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"/>
+    
     <Button
         android:id="@+id/test_alert"
         android:layout_width="fill_parent"

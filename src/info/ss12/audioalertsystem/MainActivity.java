@@ -21,6 +21,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -37,6 +38,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Switch;
+import android.widget.TextView;
 
 public class MainActivity extends Activity
 {
@@ -54,6 +56,15 @@ public class MainActivity extends Activity
 	private boolean cameraFlashAlert;
 	private boolean notificationsAlert;
 	private boolean txtMessageAlert;
+
+	private boolean firstAlarm = true;
+	private boolean pastAllotted = false;
+	private int alarmCount = 0;
+	private CountDownTimer countDownTimer;
+	private CountDownTimer silenceTimer;
+	private long countDownTime = 10000;
+	private TextView timerView;
+
 	private Switch micSwitch;
 	private Button testAlert;
 
@@ -71,7 +82,7 @@ public class MainActivity extends Activity
 
 	private GPSAlert gpsAlert;
 	private Intent intent; // Used for Service
-	
+
 	private View mainView = null;
 	private View settingsView = null;
 	private View helpView = null;
@@ -80,8 +91,9 @@ public class MainActivity extends Activity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		if(mainView == null)
-			mainView = getLayoutInflater().inflate(R.layout.activity_main, null);
+		if (mainView == null)
+			mainView = getLayoutInflater()
+					.inflate(R.layout.activity_main, null);
 		setContentView(mainView);
 		// Restore preferences
 		SharedPreferences settings = getSharedPreferences(AUDIO_PREF, 0);
@@ -90,7 +102,8 @@ public class MainActivity extends Activity
 		cameraFlashAlert = settings.getBoolean(CAMERA, true);
 		notificationsAlert = settings.getBoolean(NOTIFICATION, true);
 		txtMessageAlert = settings.getBoolean(TEXT, true);
-		Set<String> phoneList = settings.getStringSet(PHONE_LIST, new TreeSet<String>());
+		Set<String> phoneList = settings.getStringSet(PHONE_LIST,
+				new TreeSet<String>());
 		List<String> phones = new ArrayList<String>(phoneList);
 		listView = (ListView) findViewById(R.id.phone_list);
 		adapter = new ArrayAdapter<String>(this, R.layout.cell_layout,
@@ -109,6 +122,8 @@ public class MainActivity extends Activity
 		});
 		listView.setAdapter(adapter);
 
+		timerView = (TextView) findViewById(R.id.timer_view);
+		
 		Button add = (Button) findViewById(R.id.add_phone_button);
 		add.setOnClickListener(new View.OnClickListener()
 		{
@@ -153,7 +168,6 @@ public class MainActivity extends Activity
 
 		testAlert = (Button) findViewById(R.id.test_alert);
 		testAlert.setOnClickListener(buttonControl);
-		
 
 		vibrate = new VibrateNotification(this);
 		flash = new FlashNotification(this);
@@ -181,34 +195,87 @@ public class MainActivity extends Activity
 		@Override
 		public void handleMessage(Message msg)
 		{
+			if (firstAlarm && msg.arg1 == 1)
+			{
+				firstAlarm = false;
+				alarmCount = 0;
+				countDownTimer = new CountDownTimer(countDownTime, 1000)
+				{
+					@Override
+					public void onTick(long millisUntilFinished)
+					{
+						timerView.setText("seconds remaining: " + millisUntilFinished / 1000);
+					}
 
-			if (msg.arg1 == 1 && !alarmActivated) // Turn On
-			{
-				if(mainView != null && !mainView.isShown())
-					setContentView(mainView);
-				if (notificationsAlert)
-					bar.startNotify();
-				if (screenFlashAlert)
-					flash.startNotify();
-				if (vibrateAlert)
-					vibrate.startNotify();
-				if (cameraFlashAlert)
-					cameraLight.startNotify();
-				List<String> phoneNumbers = new ArrayList<String>();
-				for (int i = 0; i < adapter.getCount(); i++)
-				{
-					phoneNumbers.add(adapter.getItem(i));
-				}
-				if (!phoneNumbers.isEmpty())
-				{
-					text.setPhoneNumbers(phoneNumbers);
-					text.startNotify();
-				}
-				alarmActivated = true;
-				Notification("SS12 Audio Alert", "FIRE ALARM DETECTED");
+					@Override
+					public void onFinish()
+					{
+						pastAllotted = true;
+						timerView.setText("");
+						silenceTimer = new CountDownTimer(countDownTime, 10000)
+						{
+
+							@Override
+							public void onTick(long millisUntilFinished)
+							{
+								
+							}
+
+							@Override
+							public void onFinish()
+							{
+								firstAlarm = true;
+								pastAllotted = false;
+							}
+						};
+						silenceTimer.start();
+					}
+				};
+				countDownTimer.start();
 			}
-			else if (msg.arg1 == 0 && alarmActivated)
+
+			if (pastAllotted)
 			{
+				
+				if (msg.arg1 == 1 && !alarmActivated) // Turn On
+				{
+					if (mainView != null && !mainView.isShown())
+						setContentView(mainView);
+					if (notificationsAlert)
+						bar.startNotify();
+					if (screenFlashAlert)
+						flash.startNotify();
+					if (vibrateAlert)
+						vibrate.startNotify();
+					if (cameraFlashAlert)
+						cameraLight.startNotify();
+					List<String> phoneNumbers = new ArrayList<String>();
+					for (int i = 0; i < adapter.getCount(); i++)
+					{
+						phoneNumbers.add(adapter.getItem(i));
+					}
+					if (!phoneNumbers.isEmpty())
+					{
+						text.setPhoneNumbers(phoneNumbers);
+						text.startNotify();
+					}
+					alarmActivated = true;
+					Notification("SS12 Audio Alert", "FIRE ALARM DETECTED");
+				}
+				
+			}
+			
+			if (msg.arg1 == 0 && alarmActivated)
+			{
+				if(countDownTimer != null)
+				{
+					countDownTimer.cancel();
+				}
+				
+				if(silenceTimer!= null)
+				{
+					silenceTimer.cancel();
+				}
 				if (notificationsAlert)
 					bar.stopNotify();
 				if (screenFlashAlert)
@@ -220,9 +287,11 @@ public class MainActivity extends Activity
 				if (txtMessageAlert)
 					text.stopNotify();
 				
+				firstAlarm = true;
+				pastAllotted = false;	
 				alarmActivated = false;
 			}
-			Log.d(TAG, "FIRE ALARM DETECTED");
+
 		}
 
 	};
@@ -278,16 +347,16 @@ public class MainActivity extends Activity
 		if (settingsView != null && settingsView.isShown())
 		{
 			this.setContentView(mainView);
-//			onSettingScreen = false;
+			// onSettingScreen = false;
 			return;
 		}
-		
-		if(helpView != null && helpView.isShown())
+
+		if (helpView != null && helpView.isShown())
 		{
 			setContentView(mainView);
 			return;
 		}
-		
+
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Exit");
 		builder.setMessage("Exit application and disable service monitor? (You can press home to move to background)");
@@ -371,7 +440,7 @@ public class MainActivity extends Activity
 		}
 		if (item.getItemId() == R.id.help)
 		{
-			if(helpView == null)
+			if (helpView == null)
 			{
 				helpView = getLayoutInflater().inflate(R.layout.help, null);
 			}
@@ -379,7 +448,7 @@ public class MainActivity extends Activity
 		}
 		return false;
 	}
-	
+
 	public class SettingClickListener implements OnClickListener
 	{
 
@@ -387,28 +456,28 @@ public class MainActivity extends Activity
 		public void onClick(View v)
 		{
 			int id = v.getId();
-			if(id == R.id.notifications)
+			if (id == R.id.notifications)
 			{
-				notificationsAlert =((CheckBox)v).isChecked(); 
+				notificationsAlert = ((CheckBox) v).isChecked();
 			}
-			if(id == R.id.screen_flash)
+			if (id == R.id.screen_flash)
 			{
-				screenFlashAlert =((CheckBox)v).isChecked(); 
+				screenFlashAlert = ((CheckBox) v).isChecked();
 			}
-			if(id == R.id.vibrate)
+			if (id == R.id.vibrate)
 			{
-				vibrateAlert =((CheckBox)v).isChecked(); 
+				vibrateAlert = ((CheckBox) v).isChecked();
 			}
-			if(id == R.id.camera_flash)
+			if (id == R.id.camera_flash)
 			{
-				cameraFlashAlert =((CheckBox)v).isChecked(); 
+				cameraFlashAlert = ((CheckBox) v).isChecked();
 			}
-			if(id == R.id.txt_message)
+			if (id == R.id.txt_message)
 			{
-				txtMessageAlert =((CheckBox)v).isChecked(); 
+				txtMessageAlert = ((CheckBox) v).isChecked();
 			}
 		}
-		
+
 	}
 
 }
