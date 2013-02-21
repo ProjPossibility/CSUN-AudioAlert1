@@ -9,26 +9,51 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.telephony.SmsManager;
 
+/**
+ * The SMS Notification class to send Text Messages
+ */
 public class SMSNotification extends AbstractNotification
 {
+	/** The Main Activity */
 	MainActivity main;
+	/** The phone numbers */
 	List<String> phoneNumbers;
 
+	/**
+	 * SMS Notification constructor
+	 * 
+	 * @param main
+	 *            set the MainAcctivity
+	 */
 	public SMSNotification(MainActivity main)
 	{
 		this.main = main;
 	}
 
+	/**
+	 * Return list of phone numbers
+	 * 
+	 * @return the phone numbers
+	 */
 	public List<String> getPhoneNumbers()
 	{
 		return phoneNumbers;
 	}
 
+	/**
+	 * Set the phone numbers
+	 * 
+	 * @param phoneNumbers
+	 *            the phone numbers
+	 */
 	public void setPhoneNumbers(List<String> phoneNumbers)
 	{
 		this.phoneNumbers = phoneNumbers;
 	}
 
+	/**
+	 * Start the SMS notification
+	 */
 	@Override
 	public void startNotify()
 	{
@@ -52,12 +77,24 @@ public class SMSNotification extends AbstractNotification
 
 	}
 
+	/**
+	 * Stop the SMS notification
+	 */
 	@Override
 	public void stopNotify()
 	{
 
 	}
 
+	/**
+	 * Create google map link with coordinates
+	 * 
+	 * @param latitude
+	 *            double
+	 * @param longitude
+	 *            double
+	 * @return
+	 */
 	private String createMapsString(double latitude, double longitude)
 	{
 		String url = "https://maps.google.com/?q=";

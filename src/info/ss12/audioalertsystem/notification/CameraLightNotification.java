@@ -6,20 +6,39 @@ import java.util.TimerTask;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 
+/**
+ * The Camera light notification class
+ * 
+ */
 public class CameraLightNotification extends AbstractNotification
 {
 
+	/** The camera */
 	private Camera camera;
+
+	/** Parameter setting for camera light ON */
 	private Parameters light_ON;
+
+	/** Parameter setting for camera light OFF */
 	private Parameters light_OFF;
+
+	/** Timer to control camera light */
 	private Timer timer;
+
+	/** Toggle for light */
 	private boolean lightToggle;
 
+	/**
+	 * Constructor for Camera light notification
+	 */
 	public CameraLightNotification()
 	{
 
 	}
 
+	/**
+	 * Start notification for Camera light
+	 */
 	@Override
 	public void startNotify()
 	{
@@ -43,6 +62,9 @@ public class CameraLightNotification extends AbstractNotification
 		}, 0, 500);
 	}
 
+	/**
+	 * Stop notification for Camera light
+	 */
 	@Override
 	public void stopNotify()
 	{
@@ -51,6 +73,9 @@ public class CameraLightNotification extends AbstractNotification
 		camera.release();
 	}
 
+	/**
+	 * Configuration for Camera
+	 */
 	public void configCamera()
 	{
 		camera = Camera.open();

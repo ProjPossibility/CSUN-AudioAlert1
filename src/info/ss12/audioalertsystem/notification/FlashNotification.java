@@ -14,24 +14,42 @@ import java.util.TimerTask;
 import android.graphics.Color;
 import android.widget.LinearLayout;
 
-public class FlashNotification extends AbstractNotification
+/**
+ * The Flash notification class
+ */
+class FlashNotification extends AbstractNotification
 {
+	/** The Main Activity */
 	private MainActivity mainActivity;
+
+	/** Toggle for flashing background */
 	private boolean swap = false;
+
+	/** The timer to control the flashing */
 	private Timer timer;
 
+	/**
+	 * Flash Notification constructor
+	 * 
+	 * @param mainActivity
+	 */
 	public FlashNotification(MainActivity mainActivity)
 	{
 		this.mainActivity = mainActivity;
 	}
 
-	// starts the screen flash notification on run thread
+	/**
+	 * Starts the screen flash notification on run thread
+	 */
 	@Override
 	public void startNotify()
 	{
 		timer = new Timer();
 		timer.schedule(new TimerTask()
 		{
+			/**
+			 * Run method to kick off the thread
+			 */
 			@Override
 			public void run()
 			{
@@ -54,7 +72,9 @@ public class FlashNotification extends AbstractNotification
 		}, 0, 500);
 	}
 
-	// stops screen flash and sets background color to white
+	/**
+	 * Stops screen flash and sets background color to white
+	 */
 	@Override
 	public void stopNotify()
 	{
