@@ -25,8 +25,6 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
-import android.speech.tts.TextToSpeech;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -63,7 +61,6 @@ public class MainActivity extends Activity
 
 	private boolean firstAlarm = true;
 	private boolean pastAllotted = false;
-	private int alarmCount = 0;
 	private CountDownTimer countDownTimer;
 	private CountDownTimer silenceTimer;
 	private long countDownTime = 10000;
@@ -205,7 +202,6 @@ public class MainActivity extends Activity
 			if (firstAlarm && msg.arg1 == 1)
 			{
 				firstAlarm = false;
-				alarmCount = 0;
 				countDownTimer = new CountDownTimer(countDownTime, 1000)
 				{
 					@Override
