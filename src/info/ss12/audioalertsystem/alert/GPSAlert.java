@@ -7,7 +7,9 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
-
+/**
+ * Grabs GPS Coordinates using the users GPS feature on their phone 
+ */
 public class GPSAlert extends AbstractAlert
 {
 	Context context;
@@ -15,7 +17,9 @@ public class GPSAlert extends AbstractAlert
 	private LocationManager mlocManager;
 	public static Double CUR_LATITUDE = null;
 	public static Double CUR_LONGITUDE = null;
-
+	/**
+	 * Sets Alert Type and starts GPS
+	 */
 	public GPSAlert(Context context)
 	{
 		this.context = context;
@@ -23,7 +27,9 @@ public class GPSAlert extends AbstractAlert
 		super.sendAlert();
 		startGps();
 	}
-
+	/**
+	 * Starts GPS which sends coordinates every 10 seconds
+	 */
 	public void startGps()
 	{
 		mlocManager = (LocationManager) context
@@ -34,12 +40,17 @@ public class GPSAlert extends AbstractAlert
 		mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
 				10000, 0, mlocListener);
 	}
-
+	/**
+	 * Stops the GPS updates
+	 */
 	public void stopGps()
 	{
 		mlocManager.removeUpdates(mlocListener);
 	}
-
+	/**
+	 * Location Listener detects change in coordinates 
+	 * and  submits location coordinates
+	 */
 	public class MyLocationListeners implements LocationListener
 	{
 
@@ -53,18 +64,24 @@ public class GPSAlert extends AbstractAlert
 			// Toast.LENGTH_SHORT).show();
 		}
 
+		/**
+		 * Alerts use if GPS is disabled
+		 */
 		@Override
 		public void onProviderDisabled(String provider)
 		{
 			Toast.makeText(context, "Gps Disabled", Toast.LENGTH_SHORT).show();
 		}
-
+		
+		/**
+		 * Alerts use if GPS is enabled
+		 */
 		@Override
 		public void onProviderEnabled(String provider)
 		{
 			Toast.makeText(context, "Gps Enabled", Toast.LENGTH_SHORT).show();
 		}
-
+		
 		@Override
 		public void onStatusChanged(String provider, int status, Bundle extras)
 		{
