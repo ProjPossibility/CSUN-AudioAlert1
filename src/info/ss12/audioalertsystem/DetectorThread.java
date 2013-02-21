@@ -119,7 +119,7 @@ public class DetectorThread extends Thread
 					// MainActivity.whistleValue = numWhistles;
 
 					// whistle detection
-//					 System.out.println("Whistle:");
+					// System.out.println("Whistle:");
 					boolean isWhistle = whistleApi.isWhistle(buffer);
 					if (whistleResultList.getFirst())
 					{
@@ -133,8 +133,8 @@ public class DetectorThread extends Thread
 					{
 						numWhistles++;
 					}
-//					 System.out.println("num:" + numWhistles);
-					
+					// System.out.println("num:" + numWhistles);
+
 					if (numWhistles >= whistlePassScore)
 					{
 						// clear buffer

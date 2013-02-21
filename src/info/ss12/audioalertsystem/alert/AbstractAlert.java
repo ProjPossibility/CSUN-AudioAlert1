@@ -1,31 +1,39 @@
 package info.ss12.audioalertsystem.alert;
 
-public class AbstractAlert {
+public class AbstractAlert
+{
 
 	private String alertType;
 
 	private AlertListener alertListener;
 
-	public String getAlertType() {
+	public String getAlertType()
+	{
 		return alertType;
 	}
 
-	public void setAlertType(String alertType) {
+	public void setAlertType(String alertType)
+	{
 		this.alertType = alertType;
 	}
 
-	public void addAlertListener(AlertListener alertListener) {
+	public void addAlertListener(AlertListener alertListener)
+	{
 		this.alertListener = alertListener;
 	}
 
-	public void sendAlert() {
-		if (alertListener != null) {
+	public void sendAlert()
+	{
+		if (alertListener != null)
+		{
 			alertListener.onAlert();
 		}
 	}
-	
-	public void dismissAlert() {
-		if (alertListener != null) {
+
+	public void dismissAlert()
+	{
+		if (alertListener != null)
+		{
 			alertListener.onDismiss();
 		}
 	}

@@ -1,18 +1,22 @@
 package info.ss12.audioalertsystem.notification;
 
-public class NotificationBarNotification extends AbstractNotification {
+public class NotificationBarNotification extends AbstractNotification
+{
 
-	public NotificationBarNotification() {
-		
+	public NotificationBarNotification()
+	{
+
 	}
-	
+
 	@Override
-	public void startNotify(){
-		
+	public void startNotify()
+	{
+
 	}
-	
+
 	@Override
-	public void stopNotify(){
-		
+	public void stopNotify()
+	{
+
 	}
 }

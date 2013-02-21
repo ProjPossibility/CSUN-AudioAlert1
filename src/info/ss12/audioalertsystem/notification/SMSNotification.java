@@ -18,7 +18,7 @@ public class SMSNotification extends AbstractNotification
 	{
 		this.main = main;
 	}
-	
+
 	public List<String> getPhoneNumbers()
 	{
 		return phoneNumbers;
@@ -29,14 +29,12 @@ public class SMSNotification extends AbstractNotification
 		this.phoneNumbers = phoneNumbers;
 	}
 
-
-
 	@Override
 	public void startNotify()
 	{
-		if(GPSAlert.CUR_LATITUDE == null || GPSAlert.CUR_LONGITUDE == null)
+		if (GPSAlert.CUR_LATITUDE == null || GPSAlert.CUR_LONGITUDE == null)
 			return;
-		
+
 		PendingIntent pi = PendingIntent.getActivity(main, 0, new Intent(main,
 				MainActivity.class), 0);
 
@@ -44,8 +42,12 @@ public class SMSNotification extends AbstractNotification
 
 		for (String number : phoneNumbers)
 		{
-			sms.sendTextMessage(number, null, "An alert was detected around me. Click for location: " + createMapsString(GPSAlert.CUR_LATITUDE, GPSAlert.CUR_LONGITUDE), pi,
-					null);
+			sms.sendTextMessage(
+					number,
+					null,
+					"An alert was detected around me. Click for location: "
+							+ createMapsString(GPSAlert.CUR_LATITUDE,
+									GPSAlert.CUR_LONGITUDE), pi, null);
 		}
 
 	}

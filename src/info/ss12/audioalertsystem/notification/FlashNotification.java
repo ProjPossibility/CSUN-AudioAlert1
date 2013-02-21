@@ -5,52 +5,62 @@
  */
 package info.ss12.audioalertsystem.notification;
 
-import info.ss12.audioalertsystem.*;
+import info.ss12.audioalertsystem.MainActivity;
+import info.ss12.audioalertsystem.R;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 import android.graphics.Color;
-import android.util.Log;
 import android.widget.LinearLayout;
 
-public class FlashNotification extends AbstractNotification {
+public class FlashNotification extends AbstractNotification
+{
 	private MainActivity mainActivity;
 	private boolean swap = false;
 	private Timer timer;
-	public FlashNotification(MainActivity mainActivity) {
+
+	public FlashNotification(MainActivity mainActivity)
+	{
 		this.mainActivity = mainActivity;
 	}
-	
-	//starts the screen flash notification on run thread
+
+	// starts the screen flash notification on run thread
 	@Override
-	public void startNotify(){
+	public void startNotify()
+	{
 		timer = new Timer();
-		timer.schedule(new TimerTask() {
+		timer.schedule(new TimerTask()
+		{
 			@Override
-			public void run() {
-				mainActivity.runOnUiThread(new Runnable() 
+			public void run()
+			{
+				mainActivity.runOnUiThread(new Runnable()
 				{
-					
+
 					@Override
-					public void run() 
+					public void run()
 					{
-						//sets timer to swap color every 500ms
-						LinearLayout layout = (LinearLayout) mainActivity.findViewById(R.id.layout_main);
-						layout.setBackgroundColor(swap ? Color.RED : Color.WHITE);
+						// sets timer to swap color every 500ms
+						LinearLayout layout = (LinearLayout) mainActivity
+								.findViewById(R.id.layout_main);
+						layout.setBackgroundColor(swap ? Color.RED
+								: Color.WHITE);
 						swap ^= true;
 					}
 				});
-				
+
 			}
-		}, 0, 500);	
+		}, 0, 500);
 	}
-	
-	//stops screen flash and sets background color to white
+
+	// stops screen flash and sets background color to white
 	@Override
-	public void stopNotify(){
+	public void stopNotify()
+	{
 		timer.cancel();
-		LinearLayout layout = (LinearLayout) mainActivity.findViewById(R.id.layout_main);
+		LinearLayout layout = (LinearLayout) mainActivity
+				.findViewById(R.id.layout_main);
 		layout.setBackgroundColor(Color.WHITE);
 	}
 }

@@ -1,10 +1,10 @@
 package info.ss12.audioalertsystem.notification;
 
-import android.hardware.Camera;
-import android.hardware.Camera.Parameters;
-
 import java.util.Timer;
 import java.util.TimerTask;
+
+import android.hardware.Camera;
+import android.hardware.Camera.Parameters;
 
 public class CameraLightNotification extends AbstractNotification
 {
@@ -17,7 +17,7 @@ public class CameraLightNotification extends AbstractNotification
 
 	public CameraLightNotification()
 	{
-		
+
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class CameraLightNotification extends AbstractNotification
 		camera.stopPreview();
 		camera.release();
 	}
-	
+
 	public void configCamera()
 	{
 		camera = Camera.open();

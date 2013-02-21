@@ -15,6 +15,7 @@ public class GPSAlert extends AbstractAlert
 	private LocationManager mlocManager;
 	public static Double CUR_LATITUDE = null;
 	public static Double CUR_LONGITUDE = null;
+
 	public GPSAlert(Context context)
 	{
 		this.context = context;
@@ -22,20 +23,23 @@ public class GPSAlert extends AbstractAlert
 		super.sendAlert();
 		startGps();
 	}
-	
+
 	public void startGps()
 	{
-		mlocManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
+		mlocManager = (LocationManager) context
+				.getSystemService(Context.LOCATION_SERVICE);
 		mlocListener = new MyLocationListeners();
-		mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, mlocListener);
-		mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10000, 0, mlocListener);
+		mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000,
+				0, mlocListener);
+		mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+				10000, 0, mlocListener);
 	}
-	
+
 	public void stopGps()
 	{
 		mlocManager.removeUpdates(mlocListener);
 	}
-	
+
 	public class MyLocationListeners implements LocationListener
 	{
 
@@ -45,26 +49,27 @@ public class GPSAlert extends AbstractAlert
 			Log.d("GPS ALERT", "LocationChanged");
 			CUR_LATITUDE = new Double(loc.getLatitude());
 			CUR_LONGITUDE = new Double(loc.getLongitude());
-//			Toast.makeText(context, CUR_LATITUDE + " "+ CUR_LONGITUDE, Toast.LENGTH_SHORT).show();
+			// Toast.makeText(context, CUR_LATITUDE + " "+ CUR_LONGITUDE,
+			// Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
 		public void onProviderDisabled(String provider)
 		{
-			Toast.makeText(context,"Gps Disabled", Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "Gps Disabled", Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
 		public void onProviderEnabled(String provider)
 		{
-			Toast.makeText(context,"Gps Enabled", Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "Gps Enabled", Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
 		public void onStatusChanged(String provider, int status, Bundle extras)
 		{
-			
+
 		}
-		
+
 	}
 }
