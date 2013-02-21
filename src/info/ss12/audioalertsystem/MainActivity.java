@@ -86,9 +86,8 @@ public class MainActivity extends Activity
 	private CountDownTimer countDownTimer;
 	/** The silence timer */
 	private CountDownTimer silenceTimer;
-	private long countDownTime;
 	/** The amount of time for count down */
-	private long countDownTime = 10000;
+	private long countDownTime;
 	/** Text view for Timer */
 	private TextView timerView;
 	/** The mic switch */
