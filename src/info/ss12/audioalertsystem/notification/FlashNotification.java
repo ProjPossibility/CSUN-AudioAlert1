@@ -17,7 +17,7 @@ import android.widget.LinearLayout;
 /**
  * The Flash notification class
  */
-class FlashNotification extends AbstractNotification
+public class FlashNotification extends AbstractNotification
 {
 	/** The Main Activity */
 	private MainActivity mainActivity;
