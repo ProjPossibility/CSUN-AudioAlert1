@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+	<string name="tts">Text-to-Speech</string>
     <string name="app_name">Audio Alert</string>
     <string name="menu_settings">Settings</string>
     <string name="mic_desc">Mic</string>

@@ -40,5 +40,11 @@
         android:id="@+id/notifications"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"/>
+    <CheckBox 
+        android:textSize="20sp"
+        android:text="@string/tts"
+        android:id="@+id/tts_switch"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>
