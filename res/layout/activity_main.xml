@@ -27,16 +27,14 @@
 
         android:src="@drawable/mic_icon_off" />
 
-    <Switch
+    <CheckBox
         android:id="@+id/mic_switch"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:paddingBottom="10dp"
         android:paddingTop="10dp"
-        android:text="@string/mic_status"
-        android:textOff="@string/switch_off"
-        android:textOn="@string/switch_on" />
+        android:text="@string/mic_status"/>
 
     <LinearLayout
         android:layout_width="fill_parent"

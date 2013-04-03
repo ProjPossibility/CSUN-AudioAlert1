@@ -9,10 +9,12 @@ import info.ss12.audioalertsystem.notification.TextToSpeechNotification;
 import info.ss12.audioalertsystem.notification.VibrateNotification;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Notification;
@@ -37,7 +39,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 /**
@@ -91,7 +92,7 @@ public class MainActivity extends Activity
 	/** Text view for Timer */
 	private TextView timerView;
 	/** The mic switch */
-	private Switch micSwitch;
+	private CheckBox micSwitch;
 	/** The button for test alert */
 	private Button testAlert;
 	/** The list view */
@@ -120,7 +121,8 @@ public class MainActivity extends Activity
 	private View settingsView = null;
 	/** The help view */
 	private View helpView = null;
-
+	/** Keep track of current API */
+	private int currentApi;
 	/**
 	 * Called when the activity is starting. This is where most initialization
 	 * should go: calling setContentView(int) to inflate the activity's UI,
@@ -128,13 +130,13 @@ public class MainActivity extends Activity
 	 * UI, calling managedQuery(android.net.Uri, String[], String, String[],
 	 * String) to retrieve cursors for data being displayed, etc.
 	 */
+	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		if (mainView == null)
-			mainView = getLayoutInflater()
-					.inflate(R.layout.activity_main, null);
+			mainView = getLayoutInflater().inflate(R.layout.activity_main, null);
 		setContentView(mainView);
 		// Restore preferences
 		SharedPreferences settings = getSharedPreferences(AUDIO_PREF, 0);
@@ -145,9 +147,26 @@ public class MainActivity extends Activity
 		txtMessageAlert = settings.getBoolean(TEXT, true);
 		textToSpeech = settings.getBoolean(TEXT_TO_SPEECH, true);
 		countDownTime = settings.getLong(COUNT_DOWN, 10000);
-		Set<String> phoneList = settings.getStringSet(PHONE_LIST,
-				new TreeSet<String>());
-		List<String> phones = new ArrayList<String>(phoneList);
+		
+		List<String> phones = new ArrayList<String>();
+		//Done to ensure backwards compatibility
+		currentApi = android.os.Build.VERSION.SDK_INT; 
+				
+		if(currentApi >= android.os.Build.VERSION_CODES.HONEYCOMB)
+		{
+			Set<String> phoneList = settings.getStringSet(PHONE_LIST, new TreeSet<String>());
+			phones.addAll(phoneList);
+		}
+		else
+		{
+			String phoneList = settings.getString(PHONE_LIST, "");
+			if(phoneList.length() > 0)
+			{
+				String[] phoneToken = phoneList.split(",");
+				phones = Arrays.asList(phoneToken);
+			}
+		}
+		
 		listView = (ListView) findViewById(R.id.phone_list);
 		adapter = new ArrayAdapter<String>(this, R.layout.cell_layout,
 				R.id.phone_view, phones);
@@ -204,9 +223,9 @@ public class MainActivity extends Activity
 		});
 
 		buttonControl = new ButtonController(this);
-		micSwitch = (Switch) findViewById(R.id.mic_switch);
+		micSwitch = (CheckBox) findViewById(R.id.mic_switch);
 		micSwitch.setOnClickListener(buttonControl);
-		micSwitch.setOnTouchListener(buttonControl);
+//		micSwitch.setOnTouchListener(buttonControl);
 
 		testAlert = (Button) findViewById(R.id.test_alert);
 		testAlert.setOnClickListener(buttonControl);
@@ -462,12 +481,22 @@ public class MainActivity extends Activity
 	/**
 	 * Called when you are no longer visible to the user.
 	 */
+	@SuppressLint("NewApi")
 	@Override
 	protected void onStop()
 	{
 		SharedPreferences settings = getSharedPreferences(AUDIO_PREF, 0);
 		SharedPreferences.Editor editor = settings.edit();
-		editor.putStringSet(PHONE_LIST, getPhoneNumberList());
+		//Done for backwards compatibility
+		if(currentApi >= android.os.Build.VERSION_CODES.HONEYCOMB)
+		{
+			editor.putStringSet(PHONE_LIST, getPhoneNumberList());
+		}
+		else
+		{
+			editor.putString(PHONE_LIST, getPhoneNumberList_String());
+		}
+		
 		editor.putBoolean(NOTIFICATION, notificationsAlert);
 		editor.putBoolean(SCREEN_FLASH, screenFlashAlert);
 		editor.putBoolean(VIBRATE, vibrateAlert);
@@ -476,6 +505,8 @@ public class MainActivity extends Activity
 		editor.putBoolean(TEXT_TO_SPEECH, textToSpeech);
 		editor.putLong(COUNT_DOWN, countDownTime);
 		editor.commit();
+		
+		TTS.releaseTalker();
 		super.onStop();
 	}
 
@@ -494,6 +525,25 @@ public class MainActivity extends Activity
 		return phones;
 	}
 
+	/**
+	 * Takes phone numbers listed in adapter list and comma delimits them
+	 * @return String of comma delimited numbers
+	 */
+	public String getPhoneNumberList_String()
+	{
+		String phoneList = "";
+		for(int i = 0; i < adapter.getCount(); i++)
+		{
+			if(i == adapter.getCount() - 1)
+			{
+				phoneList += adapter.getItem(i).toString();
+				continue;
+			}
+			phoneList += adapter.getItem(i).toString() + ",";
+		}
+		
+		return phoneList;
+	}
 	/**
 	 * Perform any final cleanup before an activity is destroyed.
 	 */

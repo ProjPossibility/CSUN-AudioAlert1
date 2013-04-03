@@ -1,8 +1,9 @@
 package info.ss12.audioalertsystem.notification;
 
+import info.ss12.audioalertsystem.MainActivity;
+
 import java.util.HashMap;
 
-import info.ss12.audioalertsystem.MainActivity;
 import android.media.AudioManager;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
@@ -54,4 +55,11 @@ public class TextToSpeechNotification extends AbstractNotification implements
 		continueSpeaking = false;
 	}
 	
+	public void releaseTalker()
+	{
+		if(talker != null)
+		{
+			talker.shutdown();
+		}
+	}
 }
