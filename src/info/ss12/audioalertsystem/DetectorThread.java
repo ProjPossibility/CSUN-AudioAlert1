@@ -27,7 +27,6 @@ import java.util.LinkedList;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 
-import com.musicg.api.WhistleApi;
 import com.musicg.wave.WaveHeader;
 
 /**
@@ -86,7 +85,7 @@ public class DetectorThread extends Thread
 		// whistle detection only supports mono channel
 		if (audioRecord.getChannelConfiguration() == AudioFormat.CHANNEL_IN_MONO)
 		{
-			channel = AudioFormat.CHANNEL_IN_MONO;
+			channel = 1;
 		}
 
 		waveHeader = new WaveHeader();
