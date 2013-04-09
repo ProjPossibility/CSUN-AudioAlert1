@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
-import android.widget.Switch;
+import android.widget.ToggleButton;
 
 /**
  * ButtonController used to handle the button clicks
@@ -89,7 +89,7 @@ public class ButtonController implements OnClickListener, OnTouchListener,
 		if (id == R.id.mic_switch)
 		{
 			Log.d(TAG, "press");
-			Switch micS = (Switch) v;
+			ToggleButton micS = (ToggleButton) v;
 			ImageView micImage = (ImageView) mainActivity
 					.findViewById(R.id.mic_image);
 			if (micS.isChecked())

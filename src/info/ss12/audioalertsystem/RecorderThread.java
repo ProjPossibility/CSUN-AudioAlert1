@@ -23,6 +23,7 @@ package info.ss12.audioalertsystem;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.os.Handler;
 
 /**
  * The RecorderThread class. Used to process audio frequencies
@@ -42,7 +43,7 @@ public class RecorderThread extends Thread
 	/** Toggle for recording */
 	private boolean isRecording;
 	/** Audio format for channel configuration */
-	private int channelConfiguration = AudioFormat.CHANNEL_CONFIGURATION_MONO;
+	private int channelConfiguration = AudioFormat.CHANNEL_IN_MONO;
 	/** Audio encoding ENCODING_PCM_16BIT */
 	private int audioEncoding = AudioFormat.ENCODING_PCM_16BIT;
 	/** The sample rate */

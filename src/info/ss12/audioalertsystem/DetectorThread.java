@@ -27,7 +27,6 @@ import java.util.LinkedList;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 
-import com.musicg.api.WhistleApi;
 import com.musicg.wave.WaveHeader;
 
 /**
@@ -42,20 +41,20 @@ public class DetectorThread extends Thread
 	/** The Wave Header. Used to set wave configurations */
 	private WaveHeader waveHeader;
 	/** The Whistle API. Detect frequency */
-	private WhistleApi whistleApi;
+	private AlarmApi alarmApi;
 	/** The thread for detector */
 	private volatile Thread _thread;
 
 	/** The list for whistle results. Used to detect sound level */
-	private LinkedList<Boolean> whistleResultList = new LinkedList<Boolean>();
+	private LinkedList<Boolean> alarmResultList = new LinkedList<Boolean>();
 	/** The number of whistles */
-	private int numWhistles;
+	private int numAlarms;
 	/** Total amount of whistles detected */
-	private int totalWhistlesDetected = 0;
+	private int totalAlarmsDetected = 0;
 	/** Length check for whistle length */
-	private int whistleCheckLength = 3;
+	private int alarmCheckLength = 3;
 	/** The pass score for whistle */
-	private int whistlePassScore = 3;
+	private int alarmPassScore = 3;
 	/** Listener to send alerts */
 	private AudioAlert listener;
 
@@ -84,7 +83,7 @@ public class DetectorThread extends Thread
 
 		int channel = 0;
 		// whistle detection only supports mono channel
-		if (audioRecord.getChannelConfiguration() == AudioFormat.CHANNEL_CONFIGURATION_MONO)
+		if (audioRecord.getChannelConfiguration() == AudioFormat.CHANNEL_IN_MONO)
 		{
 			channel = 1;
 		}
@@ -93,7 +92,7 @@ public class DetectorThread extends Thread
 		waveHeader.setChannels(channel);
 		waveHeader.setBitsPerSample(bitsPerSample);
 		waveHeader.setSampleRate(audioRecord.getSampleRate());
-		whistleApi = new WhistleApi(waveHeader);
+		alarmApi = new AlarmApi(waveHeader);
 	}
 
 	/**
@@ -101,13 +100,13 @@ public class DetectorThread extends Thread
 	 */
 	private void initBuffer()
 	{
-		numWhistles = 0;
-		whistleResultList.clear();
+		numAlarms = 0;
+		alarmResultList.clear();
 
 		// init the first frames
-		for (int i = 0; i < whistleCheckLength; i++)
+		for (int i = 0; i < alarmCheckLength; i++)
 		{
-			whistleResultList.add(false);
+			alarmResultList.add(false);
 		}
 		// end init the first frames
 	}
@@ -144,7 +143,7 @@ public class DetectorThread extends Thread
 			{
 				// detect sound
 				buffer = recorder.getFrameBytes();
-
+					
 				// audio analyst
 				if (buffer != null)
 				{
@@ -153,26 +152,27 @@ public class DetectorThread extends Thread
 
 					// whistle detection
 					// System.out.println("Whistle:");
-					boolean isWhistle = whistleApi.isWhistle(buffer);
-					if (whistleResultList.getFirst())
+					
+					boolean isAlarm = alarmApi.isAlarm(buffer);
+					
+					if (alarmResultList.getFirst())
 					{
-						numWhistles--;
+						numAlarms--;
 					}
 
-					whistleResultList.removeFirst();
-					whistleResultList.add(isWhistle);
+					alarmResultList.removeFirst();
+					alarmResultList.add(isAlarm);
 
-					if (isWhistle)
+					if (isAlarm)
 					{
-						numWhistles++;
+						numAlarms++;
 					}
-					// System.out.println("num:" + numWhistles);
 
-					if (numWhistles >= whistlePassScore)
+					if (numAlarms >= alarmPassScore)
 					{
 						// clear buffer
 						initBuffer();
-						totalWhistlesDetected++;
+						totalAlarmsDetected++;
 						listener.sendAlert();
 					}
 					// end whistle detection
@@ -180,12 +180,12 @@ public class DetectorThread extends Thread
 				else
 				{
 					// no sound detected
-					if (whistleResultList.getFirst())
+					if (alarmResultList.getFirst())
 					{
-						numWhistles--;
+						numAlarms--;
 					}
-					whistleResultList.removeFirst();
-					whistleResultList.add(false);
+					alarmResultList.removeFirst();
+					alarmResultList.add(false);
 					listener.dismissAlert();
 
 					// MainActivity.whistleValue = numWhistles;
@@ -205,7 +205,7 @@ public class DetectorThread extends Thread
 	 */
 	public int getTotalWhistlesDetected()
 	{
-		return totalWhistlesDetected;
+		return totalAlarmsDetected;
 	}
 
 }
