@@ -40,6 +40,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 /**
  * The MainActivity class. Handles lifecycle of the GUI
@@ -92,7 +93,7 @@ public class MainActivity extends Activity
 	/** Text view for Timer */
 	private TextView timerView;
 	/** The mic switch */
-	private CheckBox micSwitch;
+	private ToggleButton micSwitch;
 	/** The button for test alert */
 	private Button testAlert;
 	/** The list view */
@@ -223,7 +224,7 @@ public class MainActivity extends Activity
 		});
 
 		buttonControl = new ButtonController(this);
-		micSwitch = (CheckBox) findViewById(R.id.mic_switch);
+		micSwitch = (ToggleButton) findViewById(R.id.mic_switch);
 		micSwitch.setOnClickListener(buttonControl);
 //		micSwitch.setOnTouchListener(buttonControl);
 
